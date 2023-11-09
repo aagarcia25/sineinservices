@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Usuario
  * 
- * @property uuid $Id
+ * @property string $Id
  * @property string $Usuario
  * @property string $Password
  *
@@ -19,16 +19,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Usuario extends Model
 {
-	protected $table = 'Usuarios';
+	protected $table = 'usuarios';
+	protected $primaryKey = 'Id';
 	public $incrementing = false;
 	public $timestamps = false;
 
-	protected $casts = [
-		'Id' => 'uuid'
-	];
-
 	protected $fillable = [
-		'Id',
 		'Usuario',
 		'Password'
 	];

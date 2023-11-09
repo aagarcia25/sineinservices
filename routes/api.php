@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UtilityController;
+use App\Http\Controllers\VeritasController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,8 +14,13 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "api" middleware group. Make something great!
 |
-*/
+ */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'prefix' => 'SINEIN',
+], function () {
+    Route::post('login', [LoginController::class, 'login']);
+    Route::post('selectores', [UtilityController::class, 'selectores']);
+    Route::post('Veritas', [VeritasController::class, 'Veritas']);
+
 });
