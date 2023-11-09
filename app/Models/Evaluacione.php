@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Evaluacione
- * 
+ *
  * @property string $Id
  * @property string|null $UnidadOperativa
  * @property int $llave
@@ -41,43 +41,43 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Evaluacione extends Model
 {
-	protected $table = 'evaluaciones';
-	protected $primaryKey = 'Id';
-	public $incrementing = false;
-	public $timestamps = false;
+    public $table = 'evaluaciones';
+    public $primaryKey = 'Id';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'llave' => 'int',
-		'Dia' => 'int',
-		'Anio' => 'int',
-		'deleted' => 'binary',
-		'UltimaActualizacion' => 'datetime',
-		'FechaCreacion' => 'datetime'
-	];
+    protected $_casts = [
+        'llave' => 'int',
+        'Dia' => 'int',
+        'Anio' => 'int',
 
-	protected $fillable = [
-		'UnidadOperativa',
-		'llave',
-		'Dia',
-		'Mes',
-		'Anio',
-		'FolioInterno',
-		'Tipo',
-		'PuestoSituacion',
-		'NombreExaminado',
-		'CURP',
-		'IMSS',
-		'Solicitante',
-		'FORM',
-		'Veritas',
-		'Entrevista',
-		'PC',
-		'Estatus',
-		'Observacion',
-		'deleted',
-		'UltimaActualizacion',
-		'FechaCreacion',
-		'ModificadoPor',
-		'CreadoPor'
-	];
+        'UltimaActualizacion' => 'datetime',
+        'FechaCreacion' => 'datetime',
+    ];
+
+    protected $_fillable = [
+        'UnidadOperativa',
+        'llave',
+        'Dia',
+        'Mes',
+        'Anio',
+        'FolioInterno',
+        'Tipo',
+        'PuestoSituacion',
+        'NombreExaminado',
+        'CURP',
+        'IMSS',
+        'Solicitante',
+        'FORM',
+        'Veritas',
+        'Entrevista',
+        'PC',
+        'Estatus',
+        'Observacion',
+        'deleted',
+        'UltimaActualizacion',
+        'FechaCreacion',
+        'ModificadoPor',
+        'CreadoPor',
+    ];
 }

@@ -58,9 +58,17 @@ class VeritasController extends Controller
             } elseif ($type == 2) {
 
                 $obj = Verita::find($request->CHID);
+                $obj->Nombre = $request->Nombre;
+                $obj->NumeroEmpleado = $request->NumeroEmpleado;
+                $obj->CURP = $request->CURP;
+                $obj->Area = $request->Area;
+                $obj->Puesto = $request->Puesto;
+                $obj->TipoPrueba = $request->TipoPrueba;
+                $obj->Resultado = $request->Resultado;
+                $obj->FechaAplicacion = $request->FechaAplicacion;
+                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
+                $obj->Observaciones = $request->Observaciones;
                 $obj->ModificadoPor = $request->CHUSER;
-                $obj->Nombre = $request->NOMBRE;
-                $obj->Descripcion = $request->DESCRIPCION;
                 $obj->save();
                 $response = $obj;
 
@@ -72,7 +80,19 @@ class VeritasController extends Controller
                 $response = $obj;
 
             } elseif ($type == 4) {
-                $response = DB::table('veritas')->where('deleted', '=', 0)->get();
+                $response = DB::select("
+                                        SELECT
+                                         ver.* ,
+                                         ctp.id ctpid,
+                                         ctp.Descripcion ctpDescripcion,
+                                         cr.id crid,
+                                         cr.Descripcion crDescripcion
+                                         FROM
+                                         SINEIN.veritas ver
+                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
+                                         INNER JOIN SINEIN.cat_Riesgos cr ON cr.Id = ver.Resultado
+                                         WHERE ver.deleted=0");
+
             }
         } catch (\Exception $e) {
             $SUCCESS = false;

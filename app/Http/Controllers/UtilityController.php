@@ -20,15 +20,15 @@ class UtilityController extends Controller
             $type = $request->NUMOPERACION;
 
             if ($type == 1) {
-                $query = " SELECT Id value, Descripcion label FROM SINEIN.Cat_Meses";
+                $query = " SELECT Id value, Descripcion label FROM SINEIN.cat_Meses";
             } elseif ($type == 2) {
-                $query = " SELECT Id value, Descripcion label FROM SINEIN.Cat_Riesgos";
+                $query = " SELECT Id value, Descripcion label FROM SINEIN.cat_Riesgos";
             } elseif ($type == 3) {
-                $query = " SELECT Id value, Descripcion label FROM SINEIN.Cat_TiposPrueba";
+                $query = " SELECT Id value, Descripcion label FROM SINEIN.cat_TiposPrueba";
             } elseif ($type == 4) {
-                $query = " SELECT Id value, Descripcion label FROM SINEIN.Cat_UO";
+                $query = " SELECT Id value, Descripcion label FROM SINEIN.cat_UO";
             } elseif ($type == 5) {
-                $query = " SELECT Id value, EstadoNombre label FROM SINEIN.EstadosMexicanos";
+                $query = " SELECT Id value, EstadoNombre label FROM SINEIN.estadosMexicanos";
             } elseif ($type == 6) {
             }
 

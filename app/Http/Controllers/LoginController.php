@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use stdClass;
 
 class LoginController extends Controller
 {
@@ -19,13 +20,20 @@ class LoginController extends Controller
         try {
 
             $usuarios = Usuario::where('Usuario', $request->nombreUsuario)->first();
+            $obj = new stdClass();
 
             if ($usuarios && Hash::check($request->Password, $usuarios->Password)) {
-                $response = true;
+
+                $obj->respuesta = true;
+                $obj->id = $usuarios->Id;
+
             } else {
-                $response = false;
+
+                $obj->respuesta = true;
+                $obj->id = "";
 
             }
+            $response = $obj;
 
         } catch (\Exception $e) {
             $NUMCODE = 1;

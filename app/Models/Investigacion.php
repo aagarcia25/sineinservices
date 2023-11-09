@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Investigacion
- * 
+ *
  * @property string $Id
  * @property int $llave
  * @property string|null $UnidadOperativa
@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- * 
+ *
  * @property CatUO|null $cat_u_o
  * @property CatMese|null $cat_mese
  * @property CatEstatus|null $cat_estatus
@@ -48,63 +48,63 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Investigacion extends Model
 {
-	protected $table = 'investigacion';
-	protected $primaryKey = 'Id';
-	public $incrementing = false;
-	public $timestamps = false;
+    public $table = 'investigacion';
+    public $primaryKey = 'Id';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'llave' => 'int',
-		'Dia' => 'int',
-		'Anio' => 'int',
-		'VictimaNumeroEmpleado' => 'int',
-		'VictimarioNumeroEmpleado' => 'int',
-		'deleted' => 'binary',
-		'UltimaActualizacion' => 'datetime',
-		'FechaCreacion' => 'datetime'
-	];
+    protected $_casts = [
+        'llave' => 'int',
+        'Dia' => 'int',
+        'Anio' => 'int',
+        'VictimaNumeroEmpleado' => 'int',
+        'VictimarioNumeroEmpleado' => 'int',
 
-	protected $fillable = [
-		'llave',
-		'UnidadOperativa',
-		'Dia',
-		'Mes',
-		'Anio',
-		'Hechos',
-		'Folio',
-		'VictimaNombre',
-		'VictimaNumeroEmpleado',
-		'VictimaCURP',
-		'VictimaIMSS',
-		'VictimaRazonSocial',
-		'VictimarioNombre',
-		'VictimarioNumeroEmpleado',
-		'VictimarioCURP',
-		'VictimarioIMSS',
-		'VictimarioRazonSocial',
-		'EntrevistaPC',
-		'EntrevistaVeritas',
-		'Estatus',
-		'Observacion',
-		'deleted',
-		'UltimaActualizacion',
-		'FechaCreacion',
-		'ModificadoPor',
-		'CreadoPor'
-	];
+        'UltimaActualizacion' => 'datetime',
+        'FechaCreacion' => 'datetime',
+    ];
 
-	public function cat_u_o()
-	{
-		return $this->belongsTo(CatUO::class, 'UnidadOperativa');
-	}
+    protected $_fillable = [
+        'llave',
+        'UnidadOperativa',
+        'Dia',
+        'Mes',
+        'Anio',
+        'Hechos',
+        'Folio',
+        'VictimaNombre',
+        'VictimaNumeroEmpleado',
+        'VictimaCURP',
+        'VictimaIMSS',
+        'VictimaRazonSocial',
+        'VictimarioNombre',
+        'VictimarioNumeroEmpleado',
+        'VictimarioCURP',
+        'VictimarioIMSS',
+        'VictimarioRazonSocial',
+        'EntrevistaPC',
+        'EntrevistaVeritas',
+        'Estatus',
+        'Observacion',
+        'deleted',
+        'UltimaActualizacion',
+        'FechaCreacion',
+        'ModificadoPor',
+        'CreadoPor',
+    ];
 
-	public function cat_mese()
-	{
-		return $this->belongsTo(CatMese::class, 'Mes');
-	}
+    public function cat_u_o()
+    {
+        return $this->belongsTo(CatUO::class, 'UnidadOperativa');
+    }
 
-	public function cat_estatus()
-	{
-		return $this->belongsTo(CatEstatus::class, 'Estatus');
-	}
+    public function cat_mese()
+    {
+        return $this->belongsTo(CatMese::class, 'Mes');
+    }
+
+    public function cat_estatus()
+    {
+        return $this->belongsTo(CatEstatus::class, 'Estatus');
+    }
 }

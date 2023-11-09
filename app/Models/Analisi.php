@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Analisi
- * 
+ *
  * @property string $Id
  * @property int $llave
  * @property string|null $Lugar
@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- * 
+ *
  * @property EstadosMexicano|null $estados_mexicano
  * @property CatMese|null $cat_mese
  * @property CatEstatus|null $cat_estatus
@@ -38,52 +38,52 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Analisi extends Model
 {
-	protected $table = 'analisis';
-	protected $primaryKey = 'Id';
-	public $incrementing = false;
-	public $timestamps = false;
+    public $table = 'analisis';
+    public $primaryKey = 'Id';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'llave' => 'int',
-		'Dia' => 'int',
-		'Anio' => 'int',
-		'Actualizacion' => 'datetime',
-		'deleted' => 'binary',
-		'UltimaActualizacion' => 'datetime',
-		'FechaCreacion' => 'datetime'
-	];
+    protected $_casts = [
+        'llave' => 'int',
+        'Dia' => 'int',
+        'Anio' => 'int',
+        'Actualizacion' => 'datetime',
 
-	protected $fillable = [
-		'llave',
-		'Lugar',
-		'Dia',
-		'Mes',
-		'Anio',
-		'FolioInterno',
-		'Tipo',
-		'Hechos',
-		'Estatus',
-		'Observacion',
-		'Actualizacion',
-		'deleted',
-		'UltimaActualizacion',
-		'FechaCreacion',
-		'ModificadoPor',
-		'CreadoPor'
-	];
+        'UltimaActualizacion' => 'datetime',
+        'FechaCreacion' => 'datetime',
+    ];
 
-	public function estados_mexicano()
-	{
-		return $this->belongsTo(EstadosMexicano::class, 'Lugar');
-	}
+    protected $_fillable = [
+        'llave',
+        'Lugar',
+        'Dia',
+        'Mes',
+        'Anio',
+        'FolioInterno',
+        'Tipo',
+        'Hechos',
+        'Estatus',
+        'Observacion',
+        'Actualizacion',
+        'deleted',
+        'UltimaActualizacion',
+        'FechaCreacion',
+        'ModificadoPor',
+        'CreadoPor',
+    ];
 
-	public function cat_mese()
-	{
-		return $this->belongsTo(CatMese::class, 'Mes');
-	}
+    public function estados_mexicano()
+    {
+        return $this->belongsTo(EstadosMexicano::class, 'Lugar');
+    }
 
-	public function cat_estatus()
-	{
-		return $this->belongsTo(CatEstatus::class, 'Estatus');
-	}
+    public function cat_mese()
+    {
+        return $this->belongsTo(CatMese::class, 'Mes');
+    }
+
+    public function cat_estatus()
+    {
+        return $this->belongsTo(CatEstatus::class, 'Estatus');
+    }
 }

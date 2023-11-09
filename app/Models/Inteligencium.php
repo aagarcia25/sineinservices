@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Inteligencium
- * 
+ *
  * @property string $Id
  * @property int $llave
  * @property string|null $UnidadOperativa
@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- * 
+ *
  * @property CatUO|null $cat_u_o
  * @property CatMese|null $cat_mese
  * @property CatEstatus|null $cat_estatus
@@ -45,58 +45,58 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Inteligencium extends Model
 {
-	protected $table = 'inteligencia';
-	protected $primaryKey = 'Id';
-	public $incrementing = false;
-	public $timestamps = false;
+    public $table = 'inteligencia';
+    public $primaryKey = 'Id';
+    public $incrementing = false;
+    public $timestamps = false;
 
-	protected $casts = [
-		'llave' => 'int',
-		'Dia' => 'int',
-		'Anio' => 'int',
-		'deleted' => 'binary',
-		'UltimaActualizacion' => 'datetime',
-		'FechaCreacion' => 'datetime'
-	];
+    protected $_casts = [
+        'llave' => 'int',
+        'Dia' => 'int',
+        'Anio' => 'int',
 
-	protected $fillable = [
-		'llave',
-		'UnidadOperativa',
-		'Dia',
-		'Mes',
-		'Anio',
-		'Folio',
-		'Tipo',
-		'Puesto',
-		'Nombre',
-		'CURP',
-		'IMSS',
-		'Solicitante',
-		'Form',
-		'Veritas',
-		'Entrevista',
-		'PC',
-		'Estatus',
-		'Observacion',
-		'deleted',
-		'UltimaActualizacion',
-		'FechaCreacion',
-		'ModificadoPor',
-		'CreadoPor'
-	];
+        'UltimaActualizacion' => 'datetime',
+        'FechaCreacion' => 'datetime',
+    ];
 
-	public function cat_u_o()
-	{
-		return $this->belongsTo(CatUO::class, 'UnidadOperativa');
-	}
+    protected $_fillable = [
+        'llave',
+        'UnidadOperativa',
+        'Dia',
+        'Mes',
+        'Anio',
+        'Folio',
+        'Tipo',
+        'Puesto',
+        'Nombre',
+        'CURP',
+        'IMSS',
+        'Solicitante',
+        'Form',
+        'Veritas',
+        'Entrevista',
+        'PC',
+        'Estatus',
+        'Observacion',
+        'deleted',
+        'UltimaActualizacion',
+        'FechaCreacion',
+        'ModificadoPor',
+        'CreadoPor',
+    ];
 
-	public function cat_mese()
-	{
-		return $this->belongsTo(CatMese::class, 'Mes');
-	}
+    public function cat_u_o()
+    {
+        return $this->belongsTo(CatUO::class, 'UnidadOperativa');
+    }
 
-	public function cat_estatus()
-	{
-		return $this->belongsTo(CatEstatus::class, 'Estatus');
-	}
+    public function cat_mese()
+    {
+        return $this->belongsTo(CatMese::class, 'Mes');
+    }
+
+    public function cat_estatus()
+    {
+        return $this->belongsTo(CatEstatus::class, 'Estatus');
+    }
 }
