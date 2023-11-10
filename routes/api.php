@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\AnalisisController;
+use App\Http\Controllers\InteligenciaController;
+use App\Http\Controllers\InvestigacionController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\VeritasController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +25,10 @@ Route::group([
 ], function () {
     Route::post('login', [LoginController::class, 'login']);
     Route::post('selectores', [UtilityController::class, 'selectores']);
+    Route::post('Investigacion', [InvestigacionController::class, 'Investigacion']);
+    Route::post('Inteligencia', [InteligenciaController::class, 'Inteligencia']);
+    Route::post('Analisis', [AnalisisController::class, 'Analisis']);
+    Route::post('Prueba', [PruebaController::class, 'Prueba']);
     Route::post('Veritas', [VeritasController::class, 'Veritas']);
 
 });
