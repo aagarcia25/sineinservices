@@ -31,16 +31,23 @@ class InteligenciaController extends Controller
                 $obj = new Inteligencium();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
+
+                $obj->UnidadOperativa = $request->UnidadOperativa;
+                $obj->Dia = $request->Dia;
+                $obj->Mes = $request->Mes;
+                $obj->Anio = $request->Anio;
+                $obj->Tipo = $request->Tipo;
                 $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
+                $obj->Nombre = $request->Nombre;
+                $obj->CURP = $request->CURP;
+                $obj->IMSS = $request->IMSS;
+                $obj->Solicitante = $request->Solicitante;
+                $obj->Form = $request->Form;
+                $obj->Veritas = $request->Veritas;
+                $obj->Entrevista = $request->Entrevista;
+                $obj->PC = $request->PC;
+                $obj->Estatus = $request->Estatus;
+                $obj->Observacion = $request->Observacion;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->CreadoPor = $request->CHUSER;
 
@@ -57,16 +64,22 @@ class InteligenciaController extends Controller
             } elseif ($type == 2) {
 
                 $obj = Inteligencium::find($request->CHID);
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
+                $obj->UnidadOperativa = $request->UnidadOperativa;
+                $obj->Dia = $request->Dia;
+                $obj->Mes = $request->Mes;
+                $obj->Anio = $request->Anio;
+                $obj->Tipo = $request->Tipo;
                 $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
+                $obj->Nombre = $request->Nombre;
+                $obj->CURP = $request->CURP;
+                $obj->IMSS = $request->IMSS;
+                $obj->Solicitante = $request->Solicitante;
+                $obj->Form = $request->Form;
+                $obj->Veritas = $request->Veritas;
+                $obj->Entrevista = $request->Entrevista;
+                $obj->PC = $request->PC;
+                $obj->Estatus = $request->Estatus;
+                $obj->Observacion = $request->Observacion;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
@@ -81,16 +94,20 @@ class InteligenciaController extends Controller
             } elseif ($type == 4) {
                 $response = DB::select("
                                         SELECT
-                                         ver.* ,
-                                         ctp.id ctpid,
-                                         ctp.Descripcion ctpDescripcion,
-                                         cr.id crid,
-                                         cr.Descripcion crDescripcion
-                                         FROM
-                                         SINEIN.veritas ver
-                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
-                                         INNER JOIN SINEIN.cat_Riesgos cr ON cr.Id = ver.Resultado
-                                         WHERE ver.deleted=0");
+                                            inte.* ,
+                                            cu.id cuid,
+                                            cu.Descripcion cuDescripcion,
+                                            cm.id cmid,
+                                            cm.Descripcion cmDescripcion,
+                                            ce.id ceid,
+                                            ce.Descripcion ceDescripcion
+                                            FROM
+                                            SINEIN.inteligencia inte
+                                            INNER JOIN SINEIN.cat_UO cu ON cu.Id = inte.UnidadOperativa
+                                            INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inte.Mes
+                                            INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inte.Estatus
+                                            WHERE inte.deleted=0
+                                        ");
 
             }
         } catch (\Exception $e) {

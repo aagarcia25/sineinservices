@@ -31,16 +31,26 @@ class InvestigacionController extends Controller
                 $obj = new Investigacion();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
-                $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
+                $obj->UnidadOperativa = $request->UnidadOperativa;
+                $obj->Dia = $request->Dia;
+                $obj->Mes = $request->Mes;
+                $obj->Anio = $request->Anio;
+                $obj->Hechos = $request->Hechos;
+                $obj->VictimaNombre = $request->VictimaNombre;
+                $obj->VictimaNumeroEmpleado = $request->VictimaNumeroEmpleado;
+                $obj->VictimaCURP = $request->VictimaCURP;
+                $obj->VictimaIMSS = $request->VictimaIMSS;
+                $obj->VictimaRazonSocial = $request->VictimaRazonSocial;
+                $obj->VictimarioNombre = $request->VictimarioNombre;
+                $obj->VictimarioNumeroEmpleado = $request->VictimarioNumeroEmpleado;
+                $obj->VictimarioCURP = $request->VictimarioCURP;
+                $obj->VictimarioIMSS = $request->VictimarioIMSS;
+                $obj->VictimarioRazonSocial = $request->VictimarioRazonSocial;
+                $obj->PC = $request->PC;
+                $obj->Veritas = $request->Veritas;
+                $obj->Entrevista = $request->Entrevista;
+                $obj->Estatus = $request->Estatus;
+                $obj->Observacion = $request->Observacion;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->CreadoPor = $request->CHUSER;
 
@@ -57,16 +67,26 @@ class InvestigacionController extends Controller
             } elseif ($type == 2) {
 
                 $obj = Investigacion::find($request->CHID);
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
-                $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
+                $obj->UnidadOperativa = $request->UnidadOperativa;
+                $obj->Dia = $request->Dia;
+                $obj->Mes = $request->Mes;
+                $obj->Anio = $request->Anio;
+                $obj->Hechos = $request->Hechos;
+                $obj->VictimaNombre = $request->VictimaNombre;
+                $obj->VictimaNumeroEmpleado = $request->VictimaNumeroEmpleado;
+                $obj->VictimaCURP = $request->VictimaCURP;
+                $obj->VictimaIMSS = $request->VictimaIMSS;
+                $obj->VictimaRazonSocial = $request->VictimaRazonSocial;
+                $obj->VictimarioNombre = $request->VictimarioNombre;
+                $obj->VictimarioNumeroEmpleado = $request->VictimarioNumeroEmpleado;
+                $obj->VictimarioCURP = $request->VictimarioCURP;
+                $obj->VictimarioIMSS = $request->VictimarioIMSS;
+                $obj->VictimarioRazonSocial = $request->VictimarioRazonSocial;
+                $obj->PC = $request->PC;
+                $obj->Veritas = $request->Veritas;
+                $obj->Entrevista = $request->Entrevista;
+                $obj->Estatus = $request->Estatus;
+                $obj->Observacion = $request->Observacion;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
@@ -81,16 +101,20 @@ class InvestigacionController extends Controller
             } elseif ($type == 4) {
                 $response = DB::select("
                                         SELECT
-                                         ver.* ,
-                                         ctp.id ctpid,
-                                         ctp.Descripcion ctpDescripcion,
-                                         cr.id crid,
-                                         cr.Descripcion crDescripcion
-                                         FROM
-                                         SINEIN.veritas ver
-                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
-                                         INNER JOIN SINEIN.cat_Riesgos cr ON cr.Id = ver.Resultado
-                                         WHERE ver.deleted=0");
+                                            inv.* ,
+                                            cu.id cuid,
+                                            cu.Descripcion cuDescripcion,
+                                            cm.id cmid,
+                                            cm.Descripcion cmDescripcion,
+                                            ce.id ceid,
+                                            ce.Descripcion ceDescripcion
+                                            FROM
+                                            SINEIN.investigacion inv
+                                            INNER JOIN SINEIN.cat_UO cu ON cu.Id = inv.UnidadOperativa
+                                            INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inv.Mes
+                                            INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inv.Estatus
+                                            WHERE inv.deleted=0"
+                );
 
             }
         } catch (\Exception $e) {

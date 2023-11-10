@@ -31,16 +31,15 @@ class AnalisisController extends Controller
                 $obj = new Analisi();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
-                $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
+                $obj->Lugar = $request->Lugar;
+                $obj->Dia = $request->Dia;
+                $obj->Mes = $request->Mes;
+                $obj->Anio = $request->Anio;
+                $obj->Tipo = $request->Tipo;
+                $obj->Hechos = $request->Hechos;
+                $obj->Estatus = $request->Estatus;
+                $obj->Observacion = $request->Observacion;
+                $obj->Actualizacion = $request->Actualizacion;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->CreadoPor = $request->CHUSER;
 
@@ -56,23 +55,23 @@ class AnalisisController extends Controller
 
             } elseif ($type == 2) {
 
-                $obj = Verita::find($request->CHID);
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
-                $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
+                $obj = Analisi::find($request->CHID);
+                $obj->Lugar = $request->Lugar;
+                $obj->Dia = $request->Dia;
+                $obj->Mes = $request->Mes;
+                $obj->Anio = $request->Anio;
+                $obj->Tipo = $request->Tipo;
+                $obj->Hechos = $request->Hechos;
+                $obj->Estatus = $request->Estatus;
+                $obj->Observacion = $request->Observacion;
+                $obj->Actualizacion = $request->Actualizacion;
                 $obj->ModificadoPor = $request->CHUSER;
+                $obj->CreadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
 
             } elseif ($type == 3) {
-                $obj = Verita::find($request->CHID);
+                $obj = Analisi::find($request->CHID);
                 $obj->deleted = 1;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
@@ -81,16 +80,20 @@ class AnalisisController extends Controller
             } elseif ($type == 4) {
                 $response = DB::select("
                                         SELECT
-                                         ver.* ,
-                                         ctp.id ctpid,
-                                         ctp.Descripcion ctpDescripcion,
-                                         cr.id crid,
-                                         cr.Descripcion crDescripcion
-                                         FROM
-                                         SINEIN.veritas ver
-                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
-                                         INNER JOIN SINEIN.cat_Riesgos cr ON cr.Id = ver.Resultado
-                                         WHERE ver.deleted=0");
+                                             ana.* ,
+                                             em.id cuid,
+                                             em.EstadoNombre cuDescripcion,
+                                             cm.id cmid,
+                                             cm.Descripcion cmDescripcion,
+                                             ce.id ceid,
+                                             ce.Descripcion ceDescripcion
+                                             FROM
+                                             SINEIN.analisis ana
+                                             INNER JOIN SINEIN.estadosMexicanos em ON em.Id = ana.Lugar
+                                             INNER JOIN SINEIN.cat_Meses cm ON cm.Id = ana.Mes
+                                             INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = ana.Estatus
+                                             WHERE ana.deleted=0
+                                     ");
 
             }
         } catch (\Exception $e) {

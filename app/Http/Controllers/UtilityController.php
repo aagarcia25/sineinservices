@@ -30,6 +30,11 @@ class UtilityController extends Controller
             } elseif ($type == 5) {
                 $query = " SELECT Id value, EstadoNombre label FROM SINEIN.estadosMexicanos";
             } elseif ($type == 6) {
+                $query = " SELECT 'SI' VALUE, 'SI' label FROM DUAL
+                           UNION all
+                           SELECT 'NO' VALUE, 'NO' label FROM DUAL";
+            } elseif ($type == 7) {
+                $query = " SELECT Id value, Descripcion label FROM SINEIN.cat_Estatus";
             }
 
             $response = DB::select($query);

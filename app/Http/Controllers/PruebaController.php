@@ -55,7 +55,6 @@ class PruebaController extends Controller
                 $response = $obj;
 
             } elseif ($type == 2) {
-
                 $obj = Prueba::find($request->CHID);
                 $obj->Nombre = $request->Nombre;
                 $obj->NumeroEmpleado = $request->NumeroEmpleado;
@@ -67,7 +66,7 @@ class PruebaController extends Controller
                 $obj->FechaAplicacion = $request->FechaAplicacion;
                 $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
                 $obj->Observaciones = $request->Observaciones;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj->CreadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
 
@@ -80,17 +79,15 @@ class PruebaController extends Controller
 
             } elseif ($type == 4) {
                 $response = DB::select("
-                                        SELECT
-                                         ver.* ,
+                                         SELECT
+                                         prue.* ,
                                          ctp.id ctpid,
-                                         ctp.Descripcion ctpDescripcion,
-                                         cr.id crid,
-                                         cr.Descripcion crDescripcion
+                                         ctp.Descripcion ctpDescripcion
                                          FROM
-                                         SINEIN.veritas ver
-                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
-                                         INNER JOIN SINEIN.cat_Riesgos cr ON cr.Id = ver.Resultado
-                                         WHERE ver.deleted=0");
+                                         SINEIN.pruebas prue
+                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = prue.TipoPrueba
+                                         WHERE prue.deleted=0
+                                         ");
 
             }
         } catch (\Exception $e) {
