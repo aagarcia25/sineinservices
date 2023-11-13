@@ -25,6 +25,7 @@ Route::group([
 ], function () {
     Route::post('login', [LoginController::class, 'login']);
     Route::post('selectores', [UtilityController::class, 'selectores']);
+    Route::post('informes', [UtilityController::class, 'informes']);
     Route::post('Investigacion', [InvestigacionController::class, 'Investigacion']);
     Route::post('Inteligencia', [InteligenciaController::class, 'Inteligencia']);
     Route::post('Analisis', [AnalisisController::class, 'Analisis']);

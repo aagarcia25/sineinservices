@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Investigacion
@@ -107,5 +108,28 @@ class Investigacion extends Model
     public function cat_estatus()
     {
         return $this->belongsTo(CatEstatus::class, 'Estatus');
+    }
+
+    public function getInvestigacionbyID($id)
+    {
+        return DB::select("
+        SELECT
+            inv.*,
+            cu.id cuid,
+            cu.Descripcion cuDescripcion,
+            cm.id cmid,
+            cm.Descripcion cmDescripcion,
+            ce.id ceid,
+            ce.Descripcion ceDescripcion
+        FROM
+            SINEIN.investigacion inv
+            INNER JOIN SINEIN.cat_UO cu ON cu.Id = inv.UnidadOperativa
+            INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inv.Mes
+            INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inv.Estatus
+        WHERE
+            inv.id = :id AND
+            inv.deleted = 0
+    ", ['id' => $id]);
+
     }
 }

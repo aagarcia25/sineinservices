@@ -2,11 +2,98 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Investigacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Mpdf\Mpdf;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class UtilityController extends Controller
 {
+
+    public function remplazarPalabras($inputPath, $outputPath, $reemplazos)
+    {
+        // Crear un objeto TemplateProcessor usando el archivo de entrada
+        $templateProcessor = new TemplateProcessor($inputPath);
+        // Itera sobre los reemplazos y los realiza en el archivo de Word
+        foreach ($reemplazos as $key => $value) {
+            $templateProcessor->setValue($key, $value);
+        }
+        // Guardar el archivo de Word resultante en la ruta de salida
+        $templateProcessor->saveAs($outputPath);
+    }
+
+    public function convierteWordAPdf($inputPath, $outputPath)
+    {
+
+        $phpWord = IOFactory::load($inputPath);
+
+        // Crear un objeto Mpdf
+        $mpdf = new Mpdf();
+        // Escribir el contenido del documento Word en el objeto Mpdf
+        foreach ($phpWord->getSections() as $section) {
+            foreach ($section->getElements() as $element) {
+                if (method_exists($element, 'getHtml')) {
+                    $mpdf->WriteHTML($element->getHtml());
+                }
+            }
+        }
+        // Salvar el PDF en un archivo
+        $mpdf->Output($outputPath, 'F');
+
+    }
+
+    public function informes(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = "";
+        $SUCCESS = true;
+        try {
+
+            $inputPath = storage_path('/informes/INV_001.docx');
+            $outputPath = storage_path('/informes/INV_001_tes.docx');
+            // $outputPathPdf = storage_path('/informes/INV_001_tes.pdf');
+            $obj = new Investigacion();
+            $param = $obj->getInvestigacionbyID($request->CHID);
+            // var_dump($param[0]);
+            $reemplazos = [
+                '${HECHOS}' => $param[0]->Hechos,
+                '${FECHA}' => $param[0]->FechaCreacion,
+                '${UO}' => $param[0]->cuDescripcion,
+                '${FOLIO}' => $param[0]->Folio,
+                '${VICTIMA}' => $param[0]->VictimaNombre,
+                '${VICTIMARIO}' => $param[0]->VictimarioNombre,
+                '${CURPVICTIMA}' => $param[0]->VictimaCURP,
+                '${CURPVICTIMARIO}' => $param[0]->VictimarioCURP,
+                '${IMSSVICTIMA}' => $param[0]->VictimaIMSS,
+                '${IMSSVICTIMARIO}' => $param[0]->VictimarioIMSS,
+                '${RAZONVICTIMA}' => $param[0]->VictimaRazonSocial,
+                '${RAZONVICTIMARIO}' => $param[0]->VictimarioRazonSocial,
+                '${ENTR}' => $param[0]->Entrevista,
+                '${PRUEBA}' => $param[0]->Veritas,
+                '${PSICO}' => $param[0]->PC,
+                '${ESTATUS}' => $param[0]->ceDescripcion,
+            ];
+            $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
+            //  $this->convierteWordAPdf($outputPath, $outputPathPdf);
+            // No need to base64 encode the content if you are going to send the file
+            $response = base64_encode(file_get_contents($outputPath));
+
+        } catch (\Exception $e) {
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json([
+            'NUMCODE' => $NUMCODE,
+            'STRMESSAGE' => $STRMESSAGE,
+            'RESPONSE' => $response,
+            'SUCCESS' => $SUCCESS,
+        ]);
+    }
 
     public function selectores(Request $request)
     {
