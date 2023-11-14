@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\File;
 use App\Models\Investigacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,7 @@ class UtilityController extends Controller
             //  $this->convierteWordAPdf($outputPath, $outputPathPdf);
             // No need to base64 encode the content if you are going to send the file
             $response = base64_encode(file_get_contents($outputPath));
+            unlink($outputPath);
 
         } catch (\Exception $e) {
             $NUMCODE = 1;
@@ -140,4 +142,77 @@ class UtilityController extends Controller
             ]);
 
     }
+
+    public function getFile(Request $request)
+    {
+        $file = File::find($request->CHID);
+        // Verificar si el archivo existe en la base de datos
+        if (!$file) {
+            abort(404); // O manejarlo de otra manera, según tus necesidades
+        }
+        // Configurar los encabezados de la respuesta
+        $headers = [
+            'Content-Type' => 'application/octet-stream',
+            'Content-Disposition' => 'attachment; filename="' . $file->FileName . '"',
+        ];
+        // Devolver la respuesta con el contenido del archivo y los encabezados configurados
+        $response = response()->make($file->Archivo, 200, $headers);
+        return $response;
+    }
+    public function FilesAdmin(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = "";
+        $SUCCESS = true;
+        try {
+            $type = $request->NUMOPERACION;
+
+            if ($type == 1) {
+
+                // Procesar y almacenar el archivo
+                $file = $request->file('FILE');
+                $fileName = $file->getClientOriginalName();
+                $fileContent = file_get_contents($file->getRealPath());
+
+                // Crear registro en la base de datos
+                $fileRecord = new File([
+                    'Modulo' => $request->modulo,
+                    'ModuloId' => $request->modulo_id,
+                    'FileName' => $fileName,
+                    'Archivo' => $fileContent,
+                    'CreadoPor' => $request->CHUSER,
+                    'FechaCreacion' => now(),
+                ]);
+
+                $fileRecord->save();
+
+            } elseif ($type == 2) {
+                // Obtener registros que cumplen con las condiciones
+                $response = File::select('Modulo', 'ModuloId', 'FileName', 'CreadoPor', 'FechaCreacion', 'id')
+                    ->where('Modulo', $request->modulo)
+                    ->where('ModuloId', $request->modulo_id)
+                    ->get();
+
+            } elseif ($type == 3) {
+
+                $obj = File::find($request->CHID);
+                $obj->delete();
+
+            }
+
+        } catch (\Exception $e) {
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json([
+            'NUMCODE' => $NUMCODE,
+            'STRMESSAGE' => $STRMESSAGE,
+            'RESPONSE' => $response,
+            'SUCCESS' => $SUCCESS,
+        ]);
+    }
+
 }
