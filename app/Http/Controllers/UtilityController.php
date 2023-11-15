@@ -6,7 +6,6 @@ use App\Models\File;
 use App\Models\Investigacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Mpdf\Mpdf;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\TemplateProcessor;
 
@@ -25,26 +24,6 @@ class UtilityController extends Controller
         $templateProcessor->saveAs($outputPath);
     }
 
-    public function convierteWordAPdf($inputPath, $outputPath)
-    {
-
-        $phpWord = IOFactory::load($inputPath);
-
-        // Crear un objeto Mpdf
-        $mpdf = new Mpdf();
-        // Escribir el contenido del documento Word en el objeto Mpdf
-        foreach ($phpWord->getSections() as $section) {
-            foreach ($section->getElements() as $element) {
-                if (method_exists($element, 'getHtml')) {
-                    $mpdf->WriteHTML($element->getHtml());
-                }
-            }
-        }
-        // Salvar el PDF en un archivo
-        $mpdf->Output($outputPath, 'F');
-
-    }
-
     public function informes(Request $request)
     {
         $NUMCODE = 0;
@@ -55,10 +34,10 @@ class UtilityController extends Controller
 
             $inputPath = storage_path('/informes/INV_001.docx');
             $outputPath = storage_path('/informes/INV_001_tes.docx');
-            // $outputPathPdf = storage_path('/informes/INV_001_tes.pdf');
+            $output = storage_path('/informes/INV.docx');
+
             $obj = new Investigacion();
             $param = $obj->getInvestigacionbyID($request->CHID);
-            // var_dump($param[0]);
             $reemplazos = [
                 '${HECHOS}' => $param[0]->Hechos,
                 '${FECHA}' => $param[0]->FechaCreacion,
@@ -78,10 +57,29 @@ class UtilityController extends Controller
                 '${ESTATUS}' => $param[0]->ceDescripcion,
             ];
             $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
-            //  $this->convierteWordAPdf($outputPath, $outputPathPdf);
             // No need to base64 encode the content if you are going to send the file
-            $response = base64_encode(file_get_contents($outputPath));
-            unlink($outputPath);
+
+            $phpWord = IOFactory::load($outputPath);
+            $imagenes = File::select('id', 'Archivo', 'FileName')
+                ->where('ModuloId', $request->CHID)
+                ->get();
+
+            $i = 1;
+            foreach ($imagenes as $imagen) {
+                // Accede a los atributos de cada imagen
+                $archivo = $imagen->Archivo;
+                $name = $imagen->FileName;
+                $this->generateWordImagen($archivo, $name, $phpWord);
+            }
+
+            $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+            $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . 'INV_001_tes.docx');
+            $objWriter->save($rutaCompleta);
+
+            $response = base64_encode(file_get_contents($rutaCompleta));
+            //unlink($outputPath);
+            //unlink($rutaCompleta);
+            //unlink($output);
 
         } catch (\Exception $e) {
             $NUMCODE = 1;
@@ -159,6 +157,7 @@ class UtilityController extends Controller
         $response = response()->make($file->Archivo, 200, $headers);
         return $response;
     }
+
     public function FilesAdmin(Request $request)
     {
         $NUMCODE = 0;
@@ -213,6 +212,21 @@ class UtilityController extends Controller
             'RESPONSE' => $response,
             'SUCCESS' => $SUCCESS,
         ]);
+    }
+
+    public function generateWordImagen($imagenData, $texto, $phpWord)
+    {
+
+        try {
+            // Agrega un párrafo al documento
+            $section = $phpWord->addSection();
+            $section->addText($texto);
+            // Inserta la imagen desde los datos binarios
+            $section->addImage($imagenData, array('width' => 300, 'height' => 200));
+        } catch (\Exception $e) {
+            // Manejar la excepción, por ejemplo, imprimir un mensaje de error
+            echo 'Error al guardar el archivo: ' . $e->getMessage();
+        }
     }
 
 }
