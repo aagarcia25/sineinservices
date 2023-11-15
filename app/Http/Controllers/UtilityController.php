@@ -141,23 +141,6 @@ class UtilityController extends Controller
 
     }
 
-    public function getFile(Request $request)
-    {
-        $file = File::find($request->CHID);
-        // Verificar si el archivo existe en la base de datos
-        if (!$file) {
-            abort(404); // O manejarlo de otra manera, según tus necesidades
-        }
-        // Configurar los encabezados de la respuesta
-        $headers = [
-            'Content-Type' => 'application/octet-stream',
-            'Content-Disposition' => 'attachment; filename="' . $file->FileName . '"',
-        ];
-        // Devolver la respuesta con el contenido del archivo y los encabezados configurados
-        $response = response()->make($file->Archivo, 200, $headers);
-        return $response;
-    }
-
     public function FilesAdmin(Request $request)
     {
         $NUMCODE = 0;
