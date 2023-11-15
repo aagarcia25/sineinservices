@@ -229,4 +229,35 @@ class UtilityController extends Controller
         }
     }
 
+    public function GetDocumento(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = "";
+        $SUCCESS = true;
+        try {
+
+            $file = File::find($request->CHID);
+
+            if ($file) {
+                $response = base64_encode($file->Archivo);
+
+            } else {
+                throw new \Exception("File not found");
+            }
+
+        } catch (\Exception $e) {
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json([
+            'NUMCODE' => $NUMCODE,
+            'STRMESSAGE' => $STRMESSAGE,
+            'RESPONSE' => $response,
+            'SUCCESS' => $SUCCESS,
+        ]);
+    }
+
 }
