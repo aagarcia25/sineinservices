@@ -5,48 +5,109 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use stdClass;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
-
         $NUMCODE = 0;
         $STRMESSAGE = 'Exito';
-        $response = "";
+        $response = new \stdClass();
         $SUCCESS = true;
 
         try {
+            $data = $this->decryptData($request->b);
+            $obj = json_decode($data);
 
-            $usuarios = Usuario::where('Usuario', $request->nombreUsuario)->first();
-            $obj = new stdClass();
+            $usuarios = Usuario::where('Usuario', $obj->nombreUsuario)->first();
 
-            if ($usuarios && Hash::check($request->Password, $usuarios->Password)) {
+            if ($usuarios && Hash::check($obj->Password, $usuarios->Password)) {
+                $usuarios = Usuario::where('Usuario', $obj->nombreUsuario)->where('SessionActiva', 0)->first();
+                if ($usuarios && Hash::check($obj->Password, $usuarios->Password)) {
+                    $userWithoutPassword = new \stdClass();
+                    $userWithoutPassword->Id = $usuarios->Id;
+                    $userWithoutPassword->Usuario = $usuarios->Usuario;
 
-                $obj->respuesta = true;
-                $obj->id = $usuarios->Id;
+                    // Acceder a los roles del usuario a través de la relación
+                    $rolesDelUsuario = $usuarios->usuario_rols;
+                    $rolesUsuario = [];
+                    // Ahora puedes acceder a los detalles de cada rol
+                    foreach ($rolesDelUsuario as $usuarioRol) {
+                        $rolesUsuario[] = $usuarioRol->role;
+                    }
 
+                    if (!$rolesUsuario) {
+                        $response = false;
+                        $STRMESSAGE = 'Usuario no cuenta con un rol asignado';
+                    } else {
+                        $usuarios->SessionActiva = 1;
+                        $usuarios->save();
+                        $response->login = true;
+                        $response->User = $userWithoutPassword;
+                        $response->Roles = $rolesUsuario;
+                    }
+                } else {
+                    $response = false;
+                    $STRMESSAGE = 'Usuario ya cuenta con una Sessión Activa';
+                }
             } else {
-
-                $obj->respuesta = true;
-                $obj->id = "";
-
+                $response = false;
+                $STRMESSAGE = 'Credenciales invalidas';
             }
-            $response = $obj;
-
         } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
             $SUCCESS = false;
         }
-        return response()->json(
-            [
-                'NUMCODE' => $NUMCODE,
-                'STRMESSAGE' => $STRMESSAGE,
-                'RESPONSE' => $response,
-                'SUCCESS' => $SUCCESS,
-            ]);
 
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                 'NUMCODE' => $NUMCODE,
+                 'STRMESSAGE' => $STRMESSAGE,
+                 'RESPONSE' => $response,
+                 'SUCCESS' => $SUCCESS,
+                ]))
+        );
+    }
+
+    public function logout(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = '';
+        $SUCCESS = true;
+
+        $data = $this->decryptData($request->b);
+        $obj = json_decode($data);
+
+        try {
+            $id = $this->decryptData($obj->id);
+            $response = $id;
+            $usuarios = Usuario::where('Id', $id)->where('SessionActiva', 1)->first();
+            if ($usuarios) {
+                $usuarios->SessionActiva = 0;
+                $usuarios->save();
+                $response = true;
+            } else {
+                $response = false;
+                $STRMESSAGE = 'Usuario ya cuenta con una Sessión Activa';
+            }
+        } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                 'NUMCODE' => $NUMCODE,
+                 'STRMESSAGE' => $STRMESSAGE,
+                 'RESPONSE' => $response,
+                 'SUCCESS' => $SUCCESS,
+                ])));
     }
 }

@@ -8,11 +8,10 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class Investigacion
- *
+ * 
  * @property string $Id
  * @property int $llave
  * @property string|null $UnidadOperativa
@@ -31,16 +30,17 @@ use Illuminate\Support\Facades\DB;
  * @property string|null $VictimarioCURP
  * @property string|null $VictimarioIMSS
  * @property string|null $VictimarioRazonSocial
- * @property string|null $EntrevistaPC
- * @property string|null $EntrevistaVeritas
+ * @property string|null $PC
+ * @property string|null $Veritas
+ * @property string|null $Entrevista
  * @property string|null $Estatus
  * @property string|null $Observacion
- * @property string $deleted
+ * @property int $Deleted
  * @property Carbon $UltimaActualizacion
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- *
+ * 
  * @property CatUO|null $cat_u_o
  * @property CatMese|null $cat_mese
  * @property CatEstatus|null $cat_estatus
@@ -49,87 +49,64 @@ use Illuminate\Support\Facades\DB;
  */
 class Investigacion extends Model
 {
-    public $table = 'investigacion';
-    public $primaryKey = 'Id';
-    public $incrementing = false;
-    public $timestamps = false;
+	protected $table = 'Investigacion';
+	protected $primaryKey = 'Id';
+	public $incrementing = false;
+	public $timestamps = false;
 
-    protected $_casts = [
-        'llave' => 'int',
-        'Dia' => 'int',
-        'Anio' => 'int',
-        'VictimaNumeroEmpleado' => 'int',
-        'VictimarioNumeroEmpleado' => 'int',
+	protected $casts = [
+		'llave' => 'int',
+		'Dia' => 'int',
+		'Anio' => 'int',
+		'VictimaNumeroEmpleado' => 'int',
+		'VictimarioNumeroEmpleado' => 'int',
+		'Deleted' => 'int',
+		'UltimaActualizacion' => 'datetime',
+		'FechaCreacion' => 'datetime'
+	];
 
-        'UltimaActualizacion' => 'datetime',
-        'FechaCreacion' => 'datetime',
-    ];
+	protected $fillable = [
+		'llave',
+		'UnidadOperativa',
+		'Dia',
+		'Mes',
+		'Anio',
+		'Hechos',
+		'Folio',
+		'VictimaNombre',
+		'VictimaNumeroEmpleado',
+		'VictimaCURP',
+		'VictimaIMSS',
+		'VictimaRazonSocial',
+		'VictimarioNombre',
+		'VictimarioNumeroEmpleado',
+		'VictimarioCURP',
+		'VictimarioIMSS',
+		'VictimarioRazonSocial',
+		'PC',
+		'Veritas',
+		'Entrevista',
+		'Estatus',
+		'Observacion',
+		'Deleted',
+		'UltimaActualizacion',
+		'FechaCreacion',
+		'ModificadoPor',
+		'CreadoPor'
+	];
 
-    protected $_fillable = [
-        'llave',
-        'UnidadOperativa',
-        'Dia',
-        'Mes',
-        'Anio',
-        'Hechos',
-        'Folio',
-        'VictimaNombre',
-        'VictimaNumeroEmpleado',
-        'VictimaCURP',
-        'VictimaIMSS',
-        'VictimaRazonSocial',
-        'VictimarioNombre',
-        'VictimarioNumeroEmpleado',
-        'VictimarioCURP',
-        'VictimarioIMSS',
-        'VictimarioRazonSocial',
-        'PC',
-        'Veritas',
-        'Entrevista',
-        'Estatus',
-        'Observacion',
-        'deleted',
-        'UltimaActualizacion',
-        'FechaCreacion',
-        'ModificadoPor',
-        'CreadoPor',
-    ];
+	public function cat_u_o()
+	{
+		return $this->belongsTo(CatUO::class, 'UnidadOperativa');
+	}
 
-    public function cat_u_o()
-    {
-        return $this->belongsTo(CatUO::class, 'UnidadOperativa');
-    }
+	public function cat_mese()
+	{
+		return $this->belongsTo(CatMese::class, 'Mes');
+	}
 
-    public function cat_mese()
-    {
-        return $this->belongsTo(CatMese::class, 'Mes');
-    }
-
-    public function cat_estatus()
-    {
-        return $this->belongsTo(CatEstatus::class, 'Estatus');
-    }
-
-    public function getInvestigacionbyID($id)
-    {
-        return DB::select("
-        SELECT
-            inv.*,
-            cu.id cuid,
-            cu.Descripcion cuDescripcion,
-            cm.id cmid,
-            cm.Descripcion cmDescripcion,
-            ce.id ceid,
-            ce.Descripcion ceDescripcion
-        FROM
-            SINEIN.investigacion inv
-            INNER JOIN SINEIN.cat_UO cu ON cu.Id = inv.UnidadOperativa
-            INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inv.Mes
-            INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inv.Estatus
-        WHERE
-            inv.id = :id AND
-            inv.deleted = 0
-    ", ['id' => $id]);
-
-    }
+	public function cat_estatus()
+	{
+		return $this->belongsTo(CatEstatus::class, 'Estatus');
+	}
 }

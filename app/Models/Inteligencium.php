@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Inteligencium
- *
+ * 
  * @property string $Id
  * @property int $llave
  * @property string|null $UnidadOperativa
@@ -31,12 +31,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $PC
  * @property string|null $Estatus
  * @property string|null $Observacion
- * @property string $deleted
+ * @property int $Deleted
  * @property Carbon $UltimaActualizacion
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- *
+ * 
  * @property CatUO|null $cat_u_o
  * @property CatMese|null $cat_mese
  * @property CatEstatus|null $cat_estatus
@@ -45,58 +45,58 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Inteligencium extends Model
 {
-    public $table = 'inteligencia';
-    public $primaryKey = 'Id';
-    public $incrementing = false;
-    public $timestamps = false;
+	protected $table = 'Inteligencia';
+	protected $primaryKey = 'Id';
+	public $incrementing = false;
+	public $timestamps = false;
 
-    protected $_casts = [
-        'llave' => 'int',
-        'Dia' => 'int',
-        'Anio' => 'int',
+	protected $casts = [
+		'llave' => 'int',
+		'Dia' => 'int',
+		'Anio' => 'int',
+		'Deleted' => 'int',
+		'UltimaActualizacion' => 'datetime',
+		'FechaCreacion' => 'datetime'
+	];
 
-        'UltimaActualizacion' => 'datetime',
-        'FechaCreacion' => 'datetime',
-    ];
+	protected $fillable = [
+		'llave',
+		'UnidadOperativa',
+		'Dia',
+		'Mes',
+		'Anio',
+		'Folio',
+		'Tipo',
+		'Puesto',
+		'Nombre',
+		'CURP',
+		'IMSS',
+		'Solicitante',
+		'Form',
+		'Veritas',
+		'Entrevista',
+		'PC',
+		'Estatus',
+		'Observacion',
+		'Deleted',
+		'UltimaActualizacion',
+		'FechaCreacion',
+		'ModificadoPor',
+		'CreadoPor'
+	];
 
-    protected $_fillable = [
-        'llave',
-        'UnidadOperativa',
-        'Dia',
-        'Mes',
-        'Anio',
-        'Folio',
-        'Tipo',
-        'Puesto',
-        'Nombre',
-        'CURP',
-        'IMSS',
-        'Solicitante',
-        'Form',
-        'Veritas',
-        'Entrevista',
-        'PC',
-        'Estatus',
-        'Observacion',
-        'deleted',
-        'UltimaActualizacion',
-        'FechaCreacion',
-        'ModificadoPor',
-        'CreadoPor',
-    ];
+	public function cat_u_o()
+	{
+		return $this->belongsTo(CatUO::class, 'UnidadOperativa');
+	}
 
-    public function cat_u_o()
-    {
-        return $this->belongsTo(CatUO::class, 'UnidadOperativa');
-    }
+	public function cat_mese()
+	{
+		return $this->belongsTo(CatMese::class, 'Mes');
+	}
 
-    public function cat_mese()
-    {
-        return $this->belongsTo(CatMese::class, 'Mes');
-    }
-
-    public function cat_estatus()
-    {
-        return $this->belongsTo(CatEstatus::class, 'Estatus');
-    }
+	public function cat_estatus()
+	{
+		return $this->belongsTo(CatEstatus::class, 'Estatus');
+	}
 }

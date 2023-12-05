@@ -58,11 +58,16 @@ return [
             'ignore_exceptions' => false,
         ],
 
-        'single' => [
+          'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
-            'level' => env('LOG_LEVEL', 'debug'),
+            'level' => env('LOG_LEVEL', 'info'),
             'replace_placeholders' => true,
+            'formatter' => [
+                 'class' => Monolog\Formatter\LineFormatter::class,
+                 'format' => "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
+                 'allowInlineLineBreaks' => true,
+               ],
         ],
 
         'daily' => [

@@ -18,11 +18,10 @@ class InteligenciaController extends Controller
 
     public function Inteligencia(Request $request)
     {
-
         $SUCCESS = true;
         $NUMCODE = 0;
         $STRMESSAGE = 'Exito';
-        $response = "";
+        $response = '';
 
         try {
             $type = $request->NUMOPERACION;
@@ -52,17 +51,13 @@ class InteligenciaController extends Controller
                 $obj->CreadoPor = $request->CHUSER;
 
                 if ($obj->save()) {
-
-                    $response = DB::select("call sp_GeneraFolio(:P_ID,:P_TIPO)", [
+                    $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
                         'P_ID' => $id, 'P_TIPO' => 'inteligencia']
                     );
-
                 }
 
                 $response = $obj;
-
             } elseif ($type == 2) {
-
                 $obj = Inteligencium::find($request->CHID);
                 $obj->UnidadOperativa = $request->UnidadOperativa;
                 $obj->Dia = $request->Dia;
@@ -83,16 +78,14 @@ class InteligenciaController extends Controller
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
-
             } elseif ($type == 3) {
                 $obj = Inteligencium::find($request->CHID);
                 $obj->deleted = 1;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
-
             } elseif ($type == 4) {
-                $response = DB::select("
+                $response = DB::select('
                                         SELECT
                                             inte.* ,
                                             cu.id cuid,
@@ -107,22 +100,22 @@ class InteligenciaController extends Controller
                                             INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inte.Mes
                                             INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inte.Estatus
                                             WHERE inte.deleted=0
-                                        ");
-
+                                        ');
             }
         } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $SUCCESS = false;
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
         }
 
-        return response()->json(
-            [
-                'NUMCODE' => $NUMCODE,
-                'STRMESSAGE' => $STRMESSAGE,
-                'RESPONSE' => $response,
-                'SUCCESS' => $SUCCESS,
-            ]);
-
+         return response()->json(
+             $this->encryptData(json_encode(
+                 [
+                     'NUMCODE' => $NUMCODE,
+                     'STRMESSAGE' => $STRMESSAGE,
+                     'RESPONSE' => $response,
+                     'SUCCESS' => $SUCCESS,
+                 ])));
     }
 }

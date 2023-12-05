@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CatRiesgo extends Model
 {
-	protected $table = 'cat_Riesgos';
+	protected $table = 'Cat_Riesgos';
 	protected $primaryKey = 'Id';
 	public $incrementing = false;
 	public $timestamps = false;

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Prueba
- *
+ * 
  * @property string $Id
  * @property int $llave
  * @property string|null $FolioInterno
@@ -25,54 +25,54 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $FechaAplicacion
  * @property Carbon|null $FechaNuevaAplicacion
  * @property string|null $Observaciones
- * @property string $deleted
+ * @property int $Deleted
  * @property Carbon $UltimaActualizacion
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- *
+ * 
  * @property CatTiposPrueba|null $cat_tipos_prueba
  *
  * @package App\Models
  */
 class Prueba extends Model
 {
-    public $table = 'pruebas';
-    public $primaryKey = 'Id';
-    public $incrementing = false;
-    public $timestamps = false;
+	protected $table = 'Pruebas';
+	protected $primaryKey = 'Id';
+	public $incrementing = false;
+	public $timestamps = false;
 
-    protected $_casts = [
-        'llave' => 'int',
-        'FechaAplicacion' => 'datetime',
-        'FechaNuevaAplicacion' => 'datetime',
+	protected $casts = [
+		'llave' => 'int',
+		'FechaAplicacion' => 'datetime',
+		'FechaNuevaAplicacion' => 'datetime',
+		'Deleted' => 'int',
+		'UltimaActualizacion' => 'datetime',
+		'FechaCreacion' => 'datetime'
+	];
 
-        'UltimaActualizacion' => 'datetime',
-        'FechaCreacion' => 'datetime',
-    ];
+	protected $fillable = [
+		'llave',
+		'FolioInterno',
+		'Nombre',
+		'NumeroEmpleado',
+		'CURP',
+		'Area',
+		'Puesto',
+		'TipoPrueba',
+		'Resultado',
+		'FechaAplicacion',
+		'FechaNuevaAplicacion',
+		'Observaciones',
+		'Deleted',
+		'UltimaActualizacion',
+		'FechaCreacion',
+		'ModificadoPor',
+		'CreadoPor'
+	];
 
-    protected $_fillable = [
-        'llave',
-        'FolioInterno',
-        'Nombre',
-        'NumeroEmpleado',
-        'CURP',
-        'Area',
-        'Puesto',
-        'TipoPrueba',
-        'Resultado',
-        'FechaAplicacion',
-        'FechaNuevaAplicacion',
-        'Observaciones',
-        'deleted',
-        'UltimaActualizacion',
-        'FechaCreacion',
-        'ModificadoPor',
-        'CreadoPor',
-    ];
-
-    public function cat_tipos_prueba()
-    {
-        return $this->belongsTo(CatTiposPrueba::class, 'TipoPrueba');
-    }
+	public function cat_tipos_prueba()
+	{
+		return $this->belongsTo(CatTiposPrueba::class, 'TipoPrueba');
+	}
 }

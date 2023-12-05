@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class EstadosMexicano extends Model
 {
-	protected $table = 'estadosMexicanos';
+	protected $table = 'EstadosMexicanos';
 	protected $primaryKey = 'Id';
 	public $incrementing = false;
 	public $timestamps = false;

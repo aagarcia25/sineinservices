@@ -18,11 +18,10 @@ class AnalisisController extends Controller
 
     public function Analisis(Request $request)
     {
-
         $SUCCESS = true;
         $NUMCODE = 0;
         $STRMESSAGE = 'Exito';
-        $response = "";
+        $response = '';
 
         try {
             $type = $request->NUMOPERACION;
@@ -44,17 +43,13 @@ class AnalisisController extends Controller
                 $obj->CreadoPor = $request->CHUSER;
 
                 if ($obj->save()) {
-
-                    $response = DB::select("call sp_GeneraFolio(:P_ID,:P_TIPO)", [
+                    $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
                         'P_ID' => $id, 'P_TIPO' => 'analisis']
                     );
-
                 }
 
                 $response = $obj;
-
             } elseif ($type == 2) {
-
                 $obj = Analisi::find($request->CHID);
                 $obj->Lugar = $request->Lugar;
                 $obj->Dia = $request->Dia;
@@ -69,16 +64,14 @@ class AnalisisController extends Controller
                 $obj->CreadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
-
             } elseif ($type == 3) {
                 $obj = Analisi::find($request->CHID);
                 $obj->deleted = 1;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
-
             } elseif ($type == 4) {
-                $response = DB::select("
+                $response = DB::select('
                                         SELECT
                                              ana.* ,
                                              em.id cuid,
@@ -93,22 +86,22 @@ class AnalisisController extends Controller
                                              INNER JOIN SINEIN.cat_Meses cm ON cm.Id = ana.Mes
                                              INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = ana.Estatus
                                              WHERE ana.deleted=0
-                                     ");
-
+                                     ');
             }
         } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $SUCCESS = false;
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
         }
 
-        return response()->json(
-            [
-                'NUMCODE' => $NUMCODE,
-                'STRMESSAGE' => $STRMESSAGE,
-                'RESPONSE' => $response,
-                'SUCCESS' => $SUCCESS,
-            ]);
-
+         return response()->json(
+             $this->encryptData(json_encode(
+                 [
+                     'NUMCODE' => $NUMCODE,
+                     'STRMESSAGE' => $STRMESSAGE,
+                     'RESPONSE' => $response,
+                     'SUCCESS' => $SUCCESS,
+                 ])));
     }
 }

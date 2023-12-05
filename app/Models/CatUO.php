@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CatUO extends Model
 {
-	protected $table = 'cat_UO';
+	protected $table = 'Cat_UO';
 	protected $primaryKey = 'Id';
 	public $incrementing = false;
 	public $timestamps = false;

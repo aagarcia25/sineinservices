@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Evaluacione
- *
+ * 
  * @property string $Id
  * @property string|null $UnidadOperativa
  * @property int $llave
@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $PC
  * @property string|null $Estatus
  * @property string|null $Observacion
- * @property string $deleted
+ * @property int $Deleted
  * @property Carbon $UltimaActualizacion
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
@@ -41,43 +41,43 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Evaluacione extends Model
 {
-    public $table = 'evaluaciones';
-    public $primaryKey = 'Id';
-    public $incrementing = false;
-    public $timestamps = false;
+	protected $table = 'Evaluaciones';
+	protected $primaryKey = 'Id';
+	public $incrementing = false;
+	public $timestamps = false;
 
-    protected $_casts = [
-        'llave' => 'int',
-        'Dia' => 'int',
-        'Anio' => 'int',
+	protected $casts = [
+		'llave' => 'int',
+		'Dia' => 'int',
+		'Anio' => 'int',
+		'Deleted' => 'int',
+		'UltimaActualizacion' => 'datetime',
+		'FechaCreacion' => 'datetime'
+	];
 
-        'UltimaActualizacion' => 'datetime',
-        'FechaCreacion' => 'datetime',
-    ];
-
-    protected $_fillable = [
-        'UnidadOperativa',
-        'llave',
-        'Dia',
-        'Mes',
-        'Anio',
-        'FolioInterno',
-        'Tipo',
-        'PuestoSituacion',
-        'NombreExaminado',
-        'CURP',
-        'IMSS',
-        'Solicitante',
-        'FORM',
-        'Veritas',
-        'Entrevista',
-        'PC',
-        'Estatus',
-        'Observacion',
-        'deleted',
-        'UltimaActualizacion',
-        'FechaCreacion',
-        'ModificadoPor',
-        'CreadoPor',
-    ];
+	protected $fillable = [
+		'UnidadOperativa',
+		'llave',
+		'Dia',
+		'Mes',
+		'Anio',
+		'FolioInterno',
+		'Tipo',
+		'PuestoSituacion',
+		'NombreExaminado',
+		'CURP',
+		'IMSS',
+		'Solicitante',
+		'FORM',
+		'Veritas',
+		'Entrevista',
+		'PC',
+		'Estatus',
+		'Observacion',
+		'Deleted',
+		'UltimaActualizacion',
+		'FechaCreacion',
+		'ModificadoPor',
+		'CreadoPor'
+	];
 }

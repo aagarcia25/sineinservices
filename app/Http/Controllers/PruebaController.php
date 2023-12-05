@@ -18,11 +18,10 @@ class PruebaController extends Controller
 
     public function Prueba(Request $request)
     {
-
         $SUCCESS = true;
         $NUMCODE = 0;
         $STRMESSAGE = 'Exito';
-        $response = "";
+        $response = '';
 
         try {
             $type = $request->NUMOPERACION;
@@ -45,15 +44,12 @@ class PruebaController extends Controller
                 $obj->CreadoPor = $request->CHUSER;
 
                 if ($obj->save()) {
-
-                    $response = DB::select("call sp_GeneraFolio(:P_ID,:P_TIPO)", [
+                    $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
                         'P_ID' => $id, 'P_TIPO' => 'pruebas']
                     );
-
                 }
 
                 $response = $obj;
-
             } elseif ($type == 2) {
                 $obj = Prueba::find($request->CHID);
                 $obj->Nombre = $request->Nombre;
@@ -69,16 +65,14 @@ class PruebaController extends Controller
                 $obj->CreadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
-
             } elseif ($type == 3) {
                 $obj = Prueba::find($request->CHID);
                 $obj->deleted = 1;
                 $obj->ModificadoPor = $request->CHUSER;
                 $obj->save();
                 $response = $obj;
-
             } elseif ($type == 4) {
-                $response = DB::select("
+                $response = DB::select('
                                          SELECT
                                          prue.* ,
                                          ctp.id ctpid,
@@ -87,22 +81,22 @@ class PruebaController extends Controller
                                          SINEIN.pruebas prue
                                          INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = prue.TipoPrueba
                                          WHERE prue.deleted=0
-                                         ");
-
+                                         ');
             }
         } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $SUCCESS = false;
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
         }
 
-        return response()->json(
-            [
-                'NUMCODE' => $NUMCODE,
-                'STRMESSAGE' => $STRMESSAGE,
-                'RESPONSE' => $response,
-                'SUCCESS' => $SUCCESS,
-            ]);
-
+         return response()->json(
+             $this->encryptData(json_encode(
+                 [
+                     'NUMCODE' => $NUMCODE,
+                     'STRMESSAGE' => $STRMESSAGE,
+                     'RESPONSE' => $response,
+                     'SUCCESS' => $SUCCESS,
+                 ])));
     }
 }

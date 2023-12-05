@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CatTiposPrueba
- *
+ * 
  * @property string $Id
  * @property string|null $Descripcion
- *
+ * 
  * @property Collection|Prueba[] $pruebas
  * @property Collection|Verita[] $veritas
  *
@@ -22,22 +22,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CatTiposPrueba extends Model
 {
-    public $table = 'cat_TiposPrueba';
-    public $primaryKey = 'Id';
-    public $incrementing = false;
-    public $timestamps = false;
+	protected $table = 'Cat_TiposPrueba';
+	protected $primaryKey = 'Id';
+	public $incrementing = false;
+	public $timestamps = false;
 
-    protected $_fillable = [
-        'Descripcion',
-    ];
+	protected $fillable = [
+		'Descripcion'
+	];
 
-    public function pruebas()
-    {
-        return $this->hasMany(Prueba::class, 'TipoPrueba');
-    }
+	public function pruebas()
+	{
+		return $this->hasMany(Prueba::class, 'TipoPrueba');
+	}
 
-    public function veritas()
-    {
-        return $this->hasMany(Verita::class, 'TipoPrueba');
-    }
+	public function veritas()
+	{
+		return $this->hasMany(Verita::class, 'TipoPrueba');
+	}
 }
