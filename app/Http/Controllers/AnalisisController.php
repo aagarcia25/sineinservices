@@ -24,10 +24,9 @@ class AnalisisController extends Controller
         $response = '';
 
         try {
-            $type = $request->NUMOPERACION;
-
             $data = $this->decryptData($request->b);
             $res = json_decode($data);
+            $type = $request->NUMOPERACION;
 
             if ($type == 1) {
                 $obj = new Analisi();
@@ -84,10 +83,10 @@ class AnalisisController extends Controller
                                              ce.id ceid,
                                              ce.Descripcion ceDescripcion
                                              FROM
-                                             SINEIN.analisis ana
-                                             INNER JOIN SINEIN.estadosMexicanos em ON em.Id = ana.Lugar
-                                             INNER JOIN SINEIN.cat_Meses cm ON cm.Id = ana.Mes
-                                             INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = ana.Estatus
+                                             SINEIN.Analisis ana
+                                             INNER JOIN SINEIN.EstadosMexicanos em ON em.Id = ana.Lugar
+                                             INNER JOIN SINEIN.Cat_Meses cm ON cm.Id = ana.Mes
+                                             INNER JOIN SINEIN.Cat_Estatus ce ON ce.Id = ana.Estatus
                                              WHERE ana.deleted=0
                                      ');
             }

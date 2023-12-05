@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $Dia
  * @property string|null $Mes
  * @property int|null $Anio
- * @property string|null $FolioInterno
+ * @property string|null $Folio
  * @property string|null $Tipo
  * @property string|null $PuestoSituacion
  * @property string|null $NombreExaminado
@@ -61,7 +61,7 @@ class Evaluacione extends Model
 		'Dia',
 		'Mes',
 		'Anio',
-		'FolioInterno',
+		'Folio',
 		'Tipo',
 		'PuestoSituacion',
 		'NombreExaminado',

@@ -80,8 +80,8 @@ class PruebaController extends Controller
                                          ctp.id ctpid,
                                          ctp.Descripcion ctpDescripcion
                                          FROM
-                                         SINEIN.pruebas prue
-                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = prue.TipoPrueba
+                                         SINEIN.Pruebas prue
+                                         INNER JOIN SINEIN.Cat_TiposPrueba ctp ON ctp.Id = prue.TipoPrueba
                                          WHERE prue.deleted=0
                                          ');
             }

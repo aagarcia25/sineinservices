@@ -82,9 +82,9 @@ class VeritasController extends Controller
                                          cr.id crid,
                                          cr.Descripcion crDescripcion
                                          FROM
-                                         SINEIN.veritas ver
-                                         INNER JOIN SINEIN.cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
-                                         INNER JOIN SINEIN.cat_Riesgos cr ON cr.Id = ver.Resultado
+                                         SINEIN.Veritas ver
+                                         INNER JOIN SINEIN.Cat_TiposPrueba ctp ON ctp.Id = ver.TipoPrueba
+                                         INNER JOIN SINEIN.Cat_Riesgos cr ON cr.Id = ver.Resultado
                                          WHERE ver.deleted=0');
             }
         } catch (\Exception $e) {

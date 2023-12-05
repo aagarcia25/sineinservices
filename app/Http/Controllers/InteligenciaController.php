@@ -98,10 +98,10 @@ class InteligenciaController extends Controller
                                             ce.id ceid,
                                             ce.Descripcion ceDescripcion
                                             FROM
-                                            SINEIN.inteligencia inte
-                                            INNER JOIN SINEIN.cat_UO cu ON cu.Id = inte.UnidadOperativa
-                                            INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inte.Mes
-                                            INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inte.Estatus
+                                            SINEIN.Inteligencia inte
+                                            INNER JOIN SINEIN.Cat_UO cu ON cu.Id = inte.UnidadOperativa
+                                            INNER JOIN SINEIN.Cat_Meses cm ON cm.Id = inte.Mes
+                                            INNER JOIN SINEIN.Cat_Estatus ce ON ce.Id = inte.Estatus
                                             WHERE inte.deleted=0
                                         ');
             }

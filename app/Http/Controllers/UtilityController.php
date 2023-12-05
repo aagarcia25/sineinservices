@@ -101,26 +101,28 @@ class UtilityController extends Controller
         $SUCCESS = true;
 
         try {
-            $type = $request->NUMOPERACION;
+            $data = $this->decryptData($request->b);
+            $obj = json_decode($data);
+            $type = $obj->NUMOPERACION;
 
             if ($type == 1) {
-                $query = ' SELECT Id value, Descripcion label FROM SINEIN.cat_Meses';
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_Meses';
             } elseif ($type == 2) {
-                $query = ' SELECT Id value, Descripcion label FROM SINEIN.cat_Riesgos';
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_Riesgos';
             } elseif ($type == 3) {
-                $query = ' SELECT Id value, Descripcion label FROM SINEIN.cat_TiposPrueba';
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_TiposPrueba';
             } elseif ($type == 4) {
-                $query = ' SELECT Id value, Descripcion label FROM SINEIN.cat_UO';
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_UO';
             } elseif ($type == 5) {
-                $query = ' SELECT Id value, EstadoNombre label FROM SINEIN.estadosMexicanos';
+                $query = ' SELECT Id value, EstadoNombre label FROM SINEIN.EstadosMexicanos';
             } elseif ($type == 6) {
                 $query = " SELECT 'SI' VALUE, 'SI' label FROM DUAL
                            UNION all
                            SELECT 'NO' VALUE, 'NO' label FROM DUAL";
             } elseif ($type == 7) {
-                $query = ' SELECT Id value, Descripcion label FROM SINEIN.cat_Estatus';
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_Estatus';
             } elseif ($type == 8) {
-                $query = ' SELECT Id value, Descripcion label FROM SINEIN.roles';
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Roles';
             }
 
             $response = DB::select($query);

@@ -24,7 +24,7 @@ class UsuariosController extends Controller
         $res = json_decode($data);
 
         try {
-            $type = $request->NUMOPERACION;
+            $type = $res->NUMOPERACION;
 
             // Definir reglas de validación comunes para inserción y actualización
             //    $reglasComunes = [
@@ -70,7 +70,7 @@ class UsuariosController extends Controller
                 if ($obj->save()) {
                     // Crear un nuevo registro en la tabla usuariorols
                     $usuariorol = new Usuariorol();
-                    $usuariorol->IdUsuarioRol = Str::uuid(); // Otra vez, utiliza Str::uuid() o la lógica que necesites
+                    $usuariorol->Id = Str::uuid(); // Otra vez, utiliza Str::uuid() o la lógica que necesites
                     $usuariorol->IdUsuario = $id; // Asociar con el usuario recién creado
                     $usuariorol->IdRol = $res->rol;
                     // Asigna el Id del rol asociado (deberías obtenerlo según tus necesidades)
@@ -106,7 +106,7 @@ class UsuariosController extends Controller
                     SELECT
                         ver.*
                     FROM
-                        SINEIN.usuarios ver
+                        SINEIN.Usuarios ver
                     WHERE ver.deleted=0');
             }
         } catch (\Exception $e) {

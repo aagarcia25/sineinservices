@@ -104,10 +104,10 @@ class InvestigacionController extends Controller
                                             ce.id ceid,
                                             ce.Descripcion ceDescripcion
                                             FROM
-                                            SINEIN.investigacion inv
-                                            INNER JOIN SINEIN.cat_UO cu ON cu.Id = inv.UnidadOperativa
-                                            INNER JOIN SINEIN.cat_Meses cm ON cm.Id = inv.Mes
-                                            INNER JOIN SINEIN.cat_Estatus ce ON ce.Id = inv.Estatus
+                                            SINEIN.Investigacion inv
+                                            INNER JOIN SINEIN.Cat_UO cu ON cu.Id = inv.UnidadOperativa
+                                            INNER JOIN SINEIN.Cat_Meses cm ON cm.Id = inv.Mes
+                                            INNER JOIN SINEIN.Cat_Estatus ce ON ce.Id = inv.Estatus
                                             WHERE inv.deleted=0'
                 );
             }

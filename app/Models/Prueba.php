@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property string $Id
  * @property int $llave
- * @property string|null $FolioInterno
+ * @property string|null $Folio
  * @property string|null $Nombre
  * @property string|null $NumeroEmpleado
  * @property string|null $CURP
@@ -53,7 +53,7 @@ class Prueba extends Model
 
 	protected $fillable = [
 		'llave',
-		'FolioInterno',
+		'Folio',
 		'Nombre',
 		'NumeroEmpleado',
 		'CURP',
