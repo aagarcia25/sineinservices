@@ -75,11 +75,10 @@ class UtilityController extends Controller
             $objWriter->save($rutaCompleta);
 
             $response = base64_encode(file_get_contents($rutaCompleta));
-            // unlink($outputPath);
-            // unlink($rutaCompleta);
-            // unlink($output);
+            unlink($outputPath);
+            unlink($rutaCompleta);
+            unlink($output);
         } catch (\Exception $e) {
-            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
             $SUCCESS = false;
@@ -150,21 +149,23 @@ class UtilityController extends Controller
         $response = '';
         $SUCCESS = true;
         try {
-            $type = $request->NUMOPERACION;
+            $data = $this->decryptData($request->b);
+            $obj = json_decode($data);
+            $type = $obj->NUMOPERACION;
 
             if ($type == 1) {
                 // Procesar y almacenar el archivo
-                $file = $request->file('FILE');
-                $fileName = $file->getClientOriginalName();
-                $fileContent = file_get_contents($file->getRealPath());
+                $file = $obj->file('FILE');
+                $fileName = $obj->getClientOriginalName();
+                $fileContent = file_get_contents($obj->getRealPath());
 
                 // Crear registro en la base de datos
                 $fileRecord = new File([
-                 'Modulo' => $request->modulo,
-                 'ModuloId' => $request->modulo_id,
+                 'Modulo' => $obj->modulo,
+                 'ModuloId' => $obj->modulo_id,
                  'FileName' => $fileName,
                  'Archivo' => $fileContent,
-                 'CreadoPor' => $request->CHUSER,
+                 'CreadoPor' => $obj->CHUSER,
                  'FechaCreacion' => now(),
                 ]);
 
@@ -172,11 +173,11 @@ class UtilityController extends Controller
             } elseif ($type == 2) {
                 // Obtener registros que cumplen con las condiciones
                 $response = File::select('Modulo', 'ModuloId', 'FileName', 'CreadoPor', 'FechaCreacion', 'id')
-                 ->where('Modulo', $request->modulo)
-                 ->where('ModuloId', $request->modulo_id)
+                 ->where('Modulo', $obj->modulo)
+                 ->where('ModuloId', $obj->modulo_id)
                  ->get();
             } elseif ($type == 3) {
-                $obj = File::find($request->CHID);
+                $obj = File::find($obj->CHID);
                 $obj->delete();
             }
         } catch (\Exception $e) {
@@ -186,12 +187,14 @@ class UtilityController extends Controller
             $SUCCESS = false;
         }
 
-        return response()->json([
-         'NUMCODE' => $NUMCODE,
-         'STRMESSAGE' => $STRMESSAGE,
-         'RESPONSE' => $response,
-         'SUCCESS' => $SUCCESS,
-        ]);
+       return response()->json(
+           $this->encryptData(json_encode(
+               [
+                   'NUMCODE' => $NUMCODE,
+                   'STRMESSAGE' => $STRMESSAGE,
+                   'RESPONSE' => $response,
+                   'SUCCESS' => $SUCCESS,
+               ])));
     }
 
     public function generateWordImagen($imagenData, $texto, $phpWord)
@@ -203,7 +206,6 @@ class UtilityController extends Controller
             // Inserta la imagen desde los datos binarios
             $section->addImage($imagenData, ['width' => 300, 'height' => 200]);
         } catch (\Exception $e) {
-            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             // Manejar la excepción, por ejemplo, imprimir un mensaje de error
             echo 'Error al guardar el archivo: '.$e->getMessage();
         }
@@ -216,7 +218,9 @@ class UtilityController extends Controller
         $response = '';
         $SUCCESS = true;
         try {
-            $file = File::find($request->CHID);
+            $data = $this->decryptData($request->b);
+            $obj = json_decode($data);
+            $file = File::find($obj->CHID);
 
             if ($file) {
                 $response = base64_encode($file->Archivo);
@@ -224,17 +228,18 @@ class UtilityController extends Controller
                 throw new \Exception('File not found');
             }
         } catch (\Exception $e) {
-            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
             $SUCCESS = false;
         }
 
-        return response()->json([
-         'NUMCODE' => $NUMCODE,
-         'STRMESSAGE' => $STRMESSAGE,
-         'RESPONSE' => $response,
-         'SUCCESS' => $SUCCESS,
-        ]);
+         return response()->json(
+             $this->encryptData(json_encode(
+                 [
+                     'NUMCODE' => $NUMCODE,
+                     'STRMESSAGE' => $STRMESSAGE,
+                     'RESPONSE' => $response,
+                     'SUCCESS' => $SUCCESS,
+                 ])));
     }
 }

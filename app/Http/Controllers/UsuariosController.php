@@ -109,6 +109,7 @@ class UsuariosController extends Controller
                         SINEIN.Usuarios ver
                     WHERE ver.deleted=0');
             }
+            DB::commit();
         } catch (\Exception $e) {
             $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             DB::rollback();
