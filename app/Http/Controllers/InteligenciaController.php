@@ -24,31 +24,34 @@ class InteligenciaController extends Controller
         $response = '';
 
         try {
-            $type = $request->NUMOPERACION;
+            $data = $this->decryptData($request->b);
+            $res = json_decode($data);
+
+            $type = $res->NUMOPERACION;
 
             if ($type == 1) {
                 $obj = new Inteligencium();
                 $id = Str::uuid();
                 $obj->Id = $id;
 
-                $obj->UnidadOperativa = $request->UnidadOperativa;
-                $obj->Dia = $request->Dia;
-                $obj->Mes = $request->Mes;
-                $obj->Anio = $request->Anio;
-                $obj->Tipo = $request->Tipo;
-                $obj->Puesto = $request->Puesto;
-                $obj->Nombre = $request->Nombre;
-                $obj->CURP = $request->CURP;
-                $obj->IMSS = $request->IMSS;
-                $obj->Solicitante = $request->Solicitante;
-                $obj->Form = $request->Form;
-                $obj->Veritas = $request->Veritas;
-                $obj->Entrevista = $request->Entrevista;
-                $obj->PC = $request->PC;
-                $obj->Estatus = $request->Estatus;
-                $obj->Observacion = $request->Observacion;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
+                $obj->UnidadOperativa = $res->UnidadOperativa;
+                $obj->Dia = $res->Dia;
+                $obj->Mes = $res->Mes;
+                $obj->Anio = $res->Anio;
+                $obj->Tipo = $res->Tipo;
+                $obj->Puesto = $res->Puesto;
+                $obj->Nombre = $res->Nombre;
+                $obj->CURP = $res->CURP;
+                $obj->IMSS = $res->IMSS;
+                $obj->Solicitante = $res->Solicitante;
+                $obj->Form = $res->Form;
+                $obj->Veritas = $res->Veritas;
+                $obj->Entrevista = $res->Entrevista;
+                $obj->PC = $res->PC;
+                $obj->Estatus = $res->Estatus;
+                $obj->Observacion = $res->Observacion;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
 
                 if ($obj->save()) {
                     $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
@@ -58,30 +61,30 @@ class InteligenciaController extends Controller
 
                 $response = $obj;
             } elseif ($type == 2) {
-                $obj = Inteligencium::find($request->CHID);
-                $obj->UnidadOperativa = $request->UnidadOperativa;
-                $obj->Dia = $request->Dia;
-                $obj->Mes = $request->Mes;
-                $obj->Anio = $request->Anio;
-                $obj->Tipo = $request->Tipo;
-                $obj->Puesto = $request->Puesto;
-                $obj->Nombre = $request->Nombre;
-                $obj->CURP = $request->CURP;
-                $obj->IMSS = $request->IMSS;
-                $obj->Solicitante = $request->Solicitante;
-                $obj->Form = $request->Form;
-                $obj->Veritas = $request->Veritas;
-                $obj->Entrevista = $request->Entrevista;
-                $obj->PC = $request->PC;
-                $obj->Estatus = $request->Estatus;
-                $obj->Observacion = $request->Observacion;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj = Inteligencium::find($res->CHID);
+                $obj->UnidadOperativa = $res->UnidadOperativa;
+                $obj->Dia = $res->Dia;
+                $obj->Mes = $res->Mes;
+                $obj->Anio = $res->Anio;
+                $obj->Tipo = $res->Tipo;
+                $obj->Puesto = $res->Puesto;
+                $obj->Nombre = $res->Nombre;
+                $obj->CURP = $res->CURP;
+                $obj->IMSS = $res->IMSS;
+                $obj->Solicitante = $res->Solicitante;
+                $obj->Form = $res->Form;
+                $obj->Veritas = $res->Veritas;
+                $obj->Entrevista = $res->Entrevista;
+                $obj->PC = $res->PC;
+                $obj->Estatus = $res->Estatus;
+                $obj->Observacion = $res->Observacion;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 3) {
-                $obj = Inteligencium::find($request->CHID);
+                $obj = Inteligencium::find($res->CHID);
                 $obj->deleted = 1;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 4) {

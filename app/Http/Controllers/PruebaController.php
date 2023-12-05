@@ -24,24 +24,26 @@ class PruebaController extends Controller
         $response = '';
 
         try {
-            $type = $request->NUMOPERACION;
+            $data = $this->decryptData($request->b);
+            $res = json_decode($data);
+            $type = $res->NUMOPERACION;
 
             if ($type == 1) {
                 $obj = new Prueba();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
-                $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
+                $obj->Nombre = $res->Nombre;
+                $obj->NumeroEmpleado = $res->NumeroEmpleado;
+                $obj->CURP = $res->CURP;
+                $obj->Area = $res->Area;
+                $obj->Puesto = $res->Puesto;
+                $obj->TipoPrueba = $res->TipoPrueba;
+                $obj->Resultado = $res->Resultado;
+                $obj->FechaAplicacion = $res->FechaAplicacion;
+                $obj->FechaNuevaAplicacion = $res->FechaNuevaAplicacion;
+                $obj->Observaciones = $res->Observaciones;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
 
                 if ($obj->save()) {
                     $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
@@ -51,24 +53,24 @@ class PruebaController extends Controller
 
                 $response = $obj;
             } elseif ($type == 2) {
-                $obj = Prueba::find($request->CHID);
-                $obj->Nombre = $request->Nombre;
-                $obj->NumeroEmpleado = $request->NumeroEmpleado;
-                $obj->CURP = $request->CURP;
-                $obj->Area = $request->Area;
-                $obj->Puesto = $request->Puesto;
-                $obj->TipoPrueba = $request->TipoPrueba;
-                $obj->Resultado = $request->Resultado;
-                $obj->FechaAplicacion = $request->FechaAplicacion;
-                $obj->FechaNuevaAplicacion = $request->FechaNuevaAplicacion;
-                $obj->Observaciones = $request->Observaciones;
-                $obj->CreadoPor = $request->CHUSER;
+                $obj = Prueba::find($res->CHID);
+                $obj->Nombre = $res->Nombre;
+                $obj->NumeroEmpleado = $res->NumeroEmpleado;
+                $obj->CURP = $res->CURP;
+                $obj->Area = $res->Area;
+                $obj->Puesto = $res->Puesto;
+                $obj->TipoPrueba = $res->TipoPrueba;
+                $obj->Resultado = $res->Resultado;
+                $obj->FechaAplicacion = $res->FechaAplicacion;
+                $obj->FechaNuevaAplicacion = $res->FechaNuevaAplicacion;
+                $obj->Observaciones = $res->Observaciones;
+                $obj->CreadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 3) {
-                $obj = Prueba::find($request->CHID);
+                $obj = Prueba::find($res->CHID);
                 $obj->deleted = 1;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 4) {

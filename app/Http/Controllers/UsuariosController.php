@@ -20,6 +20,9 @@ class UsuariosController extends Controller
         // Inserción
         DB::beginTransaction();
 
+        $data = $this->decryptData($request->b);
+        $res = json_decode($data);
+
         try {
             $type = $request->NUMOPERACION;
 
@@ -56,20 +59,20 @@ class UsuariosController extends Controller
                 $obj = new Usuario();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->Usuario = $request->Usuario;
-                $obj->password = Hash::make($request->password);
-                $obj->email = $request->email;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
-                $obj->nombre = $request->nombre;
-                $obj->apellidopaterno = $request->apellidopaterno;
-                $obj->apellidomaterno = $request->apellidomaterno;
+                $obj->Usuario = $res->Usuario;
+                $obj->password = Hash::make($res->password);
+                $obj->email = $res->email;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
+                $obj->nombre = $res->nombre;
+                $obj->apellidopaterno = $res->apellidopaterno;
+                $obj->apellidomaterno = $res->apellidomaterno;
                 if ($obj->save()) {
                     // Crear un nuevo registro en la tabla usuariorols
                     $usuariorol = new Usuariorol();
                     $usuariorol->IdUsuarioRol = Str::uuid(); // Otra vez, utiliza Str::uuid() o la lógica que necesites
                     $usuariorol->IdUsuario = $id; // Asociar con el usuario recién creado
-                    $usuariorol->IdRol = $request->rol;
+                    $usuariorol->IdRol = $res->rol;
                     // Asigna el Id del rol asociado (deberías obtenerlo según tus necesidades)
                     $usuariorol->save();
                 } else {
@@ -79,22 +82,22 @@ class UsuariosController extends Controller
                 $response = $obj;
             } elseif ($type == 2) {
                 // Actualización
-                $obj = Usuario::find($request->CHID);
-                $obj->Usuario = $request->Usuario;
-                $obj->password = Hash::make($request->password);
-                $obj->email = $request->email;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
-                $obj->nombre = $request->nombre;
-                $obj->apellidopaterno = $request->apellidopaterno;
-                $obj->apellidomaterno = $request->apellidomaterno;
+                $obj = Usuario::find($res->CHID);
+                $obj->Usuario = $res->Usuario;
+                $obj->password = Hash::make($res->password);
+                $obj->email = $res->email;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
+                $obj->nombre = $res->nombre;
+                $obj->apellidopaterno = $res->apellidopaterno;
+                $obj->apellidomaterno = $res->apellidomaterno;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 3) {
                 // Eliminación
-                $obj = Usuario::find($request->CHID);
+                $obj = Usuario::find($res->CHID);
                 $obj->deleted = 1;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 4) {
@@ -114,11 +117,13 @@ class UsuariosController extends Controller
             $STRMESSAGE = $e->getMessage();
         }
 
-        return response()->json([
-         'NUMCODE' => $NUMCODE,
-         'STRMESSAGE' => $STRMESSAGE,
-         'RESPONSE' => $response,
-         'SUCCESS' => $SUCCESS,
-        ]);
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                    'NUMCODE' => $NUMCODE,
+                    'STRMESSAGE' => $STRMESSAGE,
+                    'RESPONSE' => $response,
+                    'SUCCESS' => $SUCCESS,
+                ])));
     }
 }

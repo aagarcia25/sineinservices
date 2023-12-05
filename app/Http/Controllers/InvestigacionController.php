@@ -24,34 +24,36 @@ class InvestigacionController extends Controller
         $response = '';
 
         try {
-            $type = $request->NUMOPERACION;
+            $data = $this->decryptData($request->b);
+            $res = json_decode($data);
+            $type = $res->NUMOPERACION;
 
             if ($type == 1) {
                 $obj = new Investigacion();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->UnidadOperativa = $request->UnidadOperativa;
-                $obj->Dia = $request->Dia;
-                $obj->Mes = $request->Mes;
-                $obj->Anio = $request->Anio;
-                $obj->Hechos = $request->Hechos;
-                $obj->VictimaNombre = $request->VictimaNombre;
-                $obj->VictimaNumeroEmpleado = $request->VictimaNumeroEmpleado;
-                $obj->VictimaCURP = $request->VictimaCURP;
-                $obj->VictimaIMSS = $request->VictimaIMSS;
-                $obj->VictimaRazonSocial = $request->VictimaRazonSocial;
-                $obj->VictimarioNombre = $request->VictimarioNombre;
-                $obj->VictimarioNumeroEmpleado = $request->VictimarioNumeroEmpleado;
-                $obj->VictimarioCURP = $request->VictimarioCURP;
-                $obj->VictimarioIMSS = $request->VictimarioIMSS;
-                $obj->VictimarioRazonSocial = $request->VictimarioRazonSocial;
-                $obj->PC = $request->PC;
-                $obj->Veritas = $request->Veritas;
-                $obj->Entrevista = $request->Entrevista;
-                $obj->Estatus = $request->Estatus;
-                $obj->Observacion = $request->Observacion;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
+                $obj->UnidadOperativa = $res->UnidadOperativa;
+                $obj->Dia = $res->Dia;
+                $obj->Mes = $res->Mes;
+                $obj->Anio = $res->Anio;
+                $obj->Hechos = $res->Hechos;
+                $obj->VictimaNombre = $res->VictimaNombre;
+                $obj->VictimaNumeroEmpleado = $res->VictimaNumeroEmpleado;
+                $obj->VictimaCURP = $res->VictimaCURP;
+                $obj->VictimaIMSS = $res->VictimaIMSS;
+                $obj->VictimaRazonSocial = $res->VictimaRazonSocial;
+                $obj->VictimarioNombre = $res->VictimarioNombre;
+                $obj->VictimarioNumeroEmpleado = $res->VictimarioNumeroEmpleado;
+                $obj->VictimarioCURP = $res->VictimarioCURP;
+                $obj->VictimarioIMSS = $res->VictimarioIMSS;
+                $obj->VictimarioRazonSocial = $res->VictimarioRazonSocial;
+                $obj->PC = $res->PC;
+                $obj->Veritas = $res->Veritas;
+                $obj->Entrevista = $res->Entrevista;
+                $obj->Estatus = $res->Estatus;
+                $obj->Observacion = $res->Observacion;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
 
                 if ($obj->save()) {
                     $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
@@ -61,34 +63,34 @@ class InvestigacionController extends Controller
 
                 $response = $obj;
             } elseif ($type == 2) {
-                $obj = Investigacion::find($request->CHID);
-                $obj->UnidadOperativa = $request->UnidadOperativa;
-                $obj->Dia = $request->Dia;
-                $obj->Mes = $request->Mes;
-                $obj->Anio = $request->Anio;
-                $obj->Hechos = $request->Hechos;
-                $obj->VictimaNombre = $request->VictimaNombre;
-                $obj->VictimaNumeroEmpleado = $request->VictimaNumeroEmpleado;
-                $obj->VictimaCURP = $request->VictimaCURP;
-                $obj->VictimaIMSS = $request->VictimaIMSS;
-                $obj->VictimaRazonSocial = $request->VictimaRazonSocial;
-                $obj->VictimarioNombre = $request->VictimarioNombre;
-                $obj->VictimarioNumeroEmpleado = $request->VictimarioNumeroEmpleado;
-                $obj->VictimarioCURP = $request->VictimarioCURP;
-                $obj->VictimarioIMSS = $request->VictimarioIMSS;
-                $obj->VictimarioRazonSocial = $request->VictimarioRazonSocial;
-                $obj->PC = $request->PC;
-                $obj->Veritas = $request->Veritas;
-                $obj->Entrevista = $request->Entrevista;
-                $obj->Estatus = $request->Estatus;
-                $obj->Observacion = $request->Observacion;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj = Investigacion::find($res->CHID);
+                $obj->UnidadOperativa = $res->UnidadOperativa;
+                $obj->Dia = $res->Dia;
+                $obj->Mes = $res->Mes;
+                $obj->Anio = $res->Anio;
+                $obj->Hechos = $res->Hechos;
+                $obj->VictimaNombre = $res->VictimaNombre;
+                $obj->VictimaNumeroEmpleado = $res->VictimaNumeroEmpleado;
+                $obj->VictimaCURP = $res->VictimaCURP;
+                $obj->VictimaIMSS = $res->VictimaIMSS;
+                $obj->VictimaRazonSocial = $res->VictimaRazonSocial;
+                $obj->VictimarioNombre = $res->VictimarioNombre;
+                $obj->VictimarioNumeroEmpleado = $res->VictimarioNumeroEmpleado;
+                $obj->VictimarioCURP = $res->VictimarioCURP;
+                $obj->VictimarioIMSS = $res->VictimarioIMSS;
+                $obj->VictimarioRazonSocial = $res->VictimarioRazonSocial;
+                $obj->PC = $res->PC;
+                $obj->Veritas = $res->Veritas;
+                $obj->Entrevista = $res->Entrevista;
+                $obj->Estatus = $res->Estatus;
+                $obj->Observacion = $res->Observacion;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 3) {
-                $obj = Investigacion::find($request->CHID);
+                $obj = Investigacion::find($res->CHID);
                 $obj->deleted = 1;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 4) {

@@ -26,21 +26,24 @@ class AnalisisController extends Controller
         try {
             $type = $request->NUMOPERACION;
 
+            $data = $this->decryptData($request->b);
+            $res = json_decode($data);
+
             if ($type == 1) {
                 $obj = new Analisi();
                 $id = Str::uuid();
                 $obj->Id = $id;
-                $obj->Lugar = $request->Lugar;
-                $obj->Dia = $request->Dia;
-                $obj->Mes = $request->Mes;
-                $obj->Anio = $request->Anio;
-                $obj->Tipo = $request->Tipo;
-                $obj->Hechos = $request->Hechos;
-                $obj->Estatus = $request->Estatus;
-                $obj->Observacion = $request->Observacion;
-                $obj->Actualizacion = $request->Actualizacion;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
+                $obj->Lugar = $res->Lugar;
+                $obj->Dia = $res->Dia;
+                $obj->Mes = $res->Mes;
+                $obj->Anio = $res->Anio;
+                $obj->Tipo = $res->Tipo;
+                $obj->Hechos = $res->Hechos;
+                $obj->Estatus = $res->Estatus;
+                $obj->Observacion = $res->Observacion;
+                $obj->Actualizacion = $res->Actualizacion;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
 
                 if ($obj->save()) {
                     $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
@@ -50,24 +53,24 @@ class AnalisisController extends Controller
 
                 $response = $obj;
             } elseif ($type == 2) {
-                $obj = Analisi::find($request->CHID);
-                $obj->Lugar = $request->Lugar;
-                $obj->Dia = $request->Dia;
-                $obj->Mes = $request->Mes;
-                $obj->Anio = $request->Anio;
-                $obj->Tipo = $request->Tipo;
-                $obj->Hechos = $request->Hechos;
-                $obj->Estatus = $request->Estatus;
-                $obj->Observacion = $request->Observacion;
-                $obj->Actualizacion = $request->Actualizacion;
-                $obj->ModificadoPor = $request->CHUSER;
-                $obj->CreadoPor = $request->CHUSER;
+                $obj = Analisi::find($res->CHID);
+                $obj->Lugar = $res->Lugar;
+                $obj->Dia = $res->Dia;
+                $obj->Mes = $res->Mes;
+                $obj->Anio = $res->Anio;
+                $obj->Tipo = $res->Tipo;
+                $obj->Hechos = $res->Hechos;
+                $obj->Estatus = $res->Estatus;
+                $obj->Observacion = $res->Observacion;
+                $obj->Actualizacion = $res->Actualizacion;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->CreadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 3) {
-                $obj = Analisi::find($request->CHID);
+                $obj = Analisi::find($res->CHID);
                 $obj->deleted = 1;
-                $obj->ModificadoPor = $request->CHUSER;
+                $obj->ModificadoPor = $res->CHUSER;
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 4) {
