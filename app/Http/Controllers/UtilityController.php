@@ -30,12 +30,15 @@ class UtilityController extends Controller
         $response = '';
         $SUCCESS = true;
         try {
+            $data = $this->decryptData($request->b);
+            $res = json_decode($data);
+
             $inputPath = storage_path('/informes/INV_001.docx');
             $outputPath = storage_path('/informes/INV_001_tes.docx');
             $output = storage_path('/informes/INV.docx');
 
             $obj = new Investigacion();
-            $param = $obj->getInvestigacionbyID($request->CHID);
+            $param = $obj->getInvestigacionbyID($res->CHID);
             $reemplazos = [
              '${HECHOS}' => $param[0]->Hechos,
              '${FECHA}' => $param[0]->FechaCreacion,
@@ -75,21 +78,23 @@ class UtilityController extends Controller
             $objWriter->save($rutaCompleta);
 
             $response = base64_encode(file_get_contents($rutaCompleta));
-            unlink($outputPath);
-            unlink($rutaCompleta);
-            unlink($output);
+            // unlink($outputPath);
+            // unlink($rutaCompleta);
+            // unlink($output);
         } catch (\Exception $e) {
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
             $SUCCESS = false;
         }
 
-        return response()->json([
-         'NUMCODE' => $NUMCODE,
-         'STRMESSAGE' => $STRMESSAGE,
-         'RESPONSE' => $response,
-         'SUCCESS' => $SUCCESS,
-        ]);
+      return response()->json(
+          $this->encryptData(json_encode(
+              [
+                  'NUMCODE' => $NUMCODE,
+                  'STRMESSAGE' => $STRMESSAGE,
+                  'RESPONSE' => $response,
+                  'SUCCESS' => $SUCCESS,
+              ])));
     }
 
     public function selectores(Request $request)
