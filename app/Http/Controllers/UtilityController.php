@@ -35,7 +35,6 @@ class UtilityController extends Controller
 
             $inputPath = storage_path('/informes/INV_001.docx');
             $outputPath = storage_path('/informes/INV_001_tes.docx');
-            $output = storage_path('/informes/INV.docx');
 
             $obj = new Investigacion();
             $param = $obj->getInvestigacionbyID($res->CHID);
@@ -62,7 +61,7 @@ class UtilityController extends Controller
 
             $phpWord = IOFactory::load($outputPath);
             $imagenes = File::select('id', 'Archivo', 'FileName')
-             ->where('ModuloId', $request->CHID)
+             ->where('ModuloId', $res->CHID)
              ->get();
 
             $i = 1;
