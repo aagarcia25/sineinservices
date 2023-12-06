@@ -110,4 +110,47 @@ class LoginController extends Controller
                  'SUCCESS' => $SUCCESS,
                 ])));
     }
+
+    public function ChangePassword(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = '';
+        $SUCCESS = true;
+
+        $data = $this->decryptData($request->b);
+        $res = json_decode($data);
+
+        try {
+            $usuarios = Usuario::where('Id', $res->CHID)->first();
+            $this->logInfo($usuarios, __METHOD__, __LINE__);
+            if ($usuarios && Hash::check($res->p1, $usuarios->Password)) {
+                $usuarios->password = Hash::make($res->p2);
+                if ($usuarios->save()) {
+                    $response = false;
+                    $STRMESSAGE = 'Se actualizo la Contraseña';
+                } else {
+                    $response = false;
+                    $STRMESSAGE = 'No se actualizo la Contraseña';
+                }
+            } else {
+                $response = false;
+                throw new \Exception('Favor de Validar, la Contraseña actual', 500);
+            }
+        } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                 'NUMCODE' => $NUMCODE,
+                 'STRMESSAGE' => $STRMESSAGE,
+                 'RESPONSE' => $response,
+                 'SUCCESS' => $SUCCESS,
+                ])));
+    }
 }
