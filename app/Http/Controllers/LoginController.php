@@ -18,7 +18,7 @@ class LoginController extends Controller
         try {
             $data = $this->decryptData($request->b);
             $obj = json_decode($data);
-
+            $this->logInfo($obj->nombreUsuario, __METHOD__, __LINE__);
             $usuarios = Usuario::where('Usuario', $obj->nombreUsuario)->first();
 
             if ($usuarios && Hash::check($obj->Password, $usuarios->Password)) {
