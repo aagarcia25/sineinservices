@@ -33,7 +33,6 @@ Route::group([
  'prefix' => 'SINEIN',
  'middleware' => [ThrottleRequests::class.':100,5'], // 2 intentos en 1 minuto
 ], function () {
-    Route::post('login', [LoginController::class, 'login']);
     Route::post('logout', [LoginController::class, 'logout']);
     Route::post('ChangePassword', [LoginController::class, 'ChangePassword']);
     Route::post('selectores', [UtilityController::class, 'selectores']);
