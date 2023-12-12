@@ -26,7 +26,7 @@ class AnalisisController extends Controller
         try {
             $data = $this->decryptData($request->b);
             $res = json_decode($data);
-            $type = $request->NUMOPERACION;
+            $type = $res->NUMOPERACION;
 
             if ($type == 1) {
                 $obj = new Analisi();
