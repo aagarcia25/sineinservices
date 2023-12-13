@@ -8,7 +8,6 @@ use App\Http\Controllers\PruebaController;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\UtilityController;
 use App\Http\Controllers\VeritasController;
-use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,15 +22,9 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::group([
-'prefix' => 'SINEIN',
+ 'prefix' => 'SINEIN',
 ], function () {
     Route::post('login', [LoginController::class, 'login']);
-});
-
-Route::group([
- 'prefix' => 'SINEIN',
- 'middleware' => [ThrottleRequests::class.':100,5'], // 2 intentos en 1 minuto
-], function () {
     Route::post('logout', [LoginController::class, 'logout']);
     Route::post('ChangePassword', [LoginController::class, 'ChangePassword']);
     Route::post('selectores', [UtilityController::class, 'selectores']);
