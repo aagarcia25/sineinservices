@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
 'prefix' => 'SINEIN',
- 'middleware' => [ThrottleRequests::class.':10,1'], // 2 intentos en 1 minuto
 ], function () {
     Route::post('login', [LoginController::class, 'login']);
 });
