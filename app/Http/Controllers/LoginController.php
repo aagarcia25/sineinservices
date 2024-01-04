@@ -47,6 +47,7 @@ class LoginController extends Controller
                         $response->Roles = $rolesUsuario;
                     }
                 } else {
+                    $NUMCODE = 2525;
                     $response = false;
                     $STRMESSAGE = 'Usuario ya cuenta con una Sessión Activa';
                 }
@@ -153,4 +154,44 @@ class LoginController extends Controller
                  'SUCCESS' => $SUCCESS,
                 ])));
     }
+
+    public function logoutuser(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = '';
+        $SUCCESS = true;
+
+        $data = $this->decryptData($request->b);
+        $obj = json_decode($data);
+
+        try {
+            $id = $this->decryptData($obj->nombreUsuario);
+            $response = $id;
+            $usuarios = Usuario::where('Usuario', $id)->where('SessionActiva', 1)->first();
+            if ($usuarios) {
+                $usuarios->SessionActiva = 0;
+                $usuarios->save();
+                $response = true;
+            } else {
+                $response = false;
+                $STRMESSAGE = 'Usuario ya cuenta con una Sessión Activa';
+            }
+        } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                 'NUMCODE' => $NUMCODE,
+                 'STRMESSAGE' => $STRMESSAGE,
+                 'RESPONSE' => $response,
+                 'SUCCESS' => $SUCCESS,
+                ])));
+    }
+
 }

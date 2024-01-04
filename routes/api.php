@@ -24,8 +24,10 @@ use Illuminate\Support\Facades\Route;
 Route::group([
  'prefix' => 'SINEIN_API_JGV',
 ], function () {
-    Route::post('login', [LoginController::class, 'login']);
+
+    Route::post('login', [LoginController::class, 'login']);//->middleware('throttle:3,10');
     Route::post('logout', [LoginController::class, 'logout']);
+    Route::post('logoutuser', [LoginController::class, 'logoutuser']);
     Route::post('ChangePassword', [LoginController::class, 'ChangePassword']);
     Route::post('selectores', [UtilityController::class, 'selectores']);
     Route::post('informes', [UtilityController::class, 'informes']);
