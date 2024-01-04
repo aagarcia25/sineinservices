@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
-
+use Carbon\Carbon;
 class LoginController extends Controller
 {
     public function login(Request $request)
@@ -27,6 +28,17 @@ class LoginController extends Controller
                     $userWithoutPassword = new \stdClass();
                     $userWithoutPassword->Id = $usuarios->Id;
                     $userWithoutPassword->Usuario = $usuarios->Usuario;
+
+
+
+                    $differenceInDays = Carbon::now()->diffInDays($usuarios->updatePassword);
+                    if($differenceInDays <= 30){
+                        $userWithoutPassword->bp = true;
+                    }else{
+                        $userWithoutPassword->bp = false;
+                    }
+
+                   
 
                     // Acceder a los roles del usuario a través de la relación
                     $rolesDelUsuario = $usuarios->usuario_rols;
@@ -127,6 +139,7 @@ class LoginController extends Controller
             $this->logInfo($usuarios, __METHOD__, __LINE__);
             if ($usuarios && Hash::check($res->p1, $usuarios->Password)) {
                 $usuarios->password = Hash::make($res->p2);
+                $usuarios->updatePassword = Carbon::now();
                 if ($usuarios->save()) {
                     $response = false;
                     $STRMESSAGE = 'Se actualizo la Contraseña';

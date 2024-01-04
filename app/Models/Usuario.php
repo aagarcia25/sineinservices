@@ -41,6 +41,7 @@ class Usuario extends Model
 	protected $casts = [
 		'FechaCreacion' => 'datetime',
 		'UltimaActualizacion' => 'datetime',
+		'updatePassword' => 'datetime',
 		'Deleted' => 'int',
 		'SessionActiva' => 'int'
 	];
@@ -57,7 +58,9 @@ class Usuario extends Model
 		'nombre',
 		'apellidopaterno',
 		'apellidomaterno',
-		'SessionActiva'
+		'SessionActiva',
+		'updatePassword'
+		
 	];
 
 	public function usuario_rols()
