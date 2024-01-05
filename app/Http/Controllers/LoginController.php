@@ -32,7 +32,7 @@ class LoginController extends Controller
 
 
                     $differenceInDays = Carbon::now()->diffInDays($usuarios->updatePassword);
-                    if($differenceInDays <= 30){
+                    if($differenceInDays >= 30){
                         $userWithoutPassword->bp = true;
                     }else{
                         $userWithoutPassword->bp = false;
