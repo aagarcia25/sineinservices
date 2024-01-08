@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Usuario;
-use App\Models\Usuariorol;
+use App\Models\UsuarioRol;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -26,34 +26,7 @@ class UsuariosController extends Controller
         try {
             $type = $res->NUMOPERACION;
 
-            // Definir reglas de validación comunes para inserción y actualización
-            //    $reglasComunes = [
-            //     'Usuario' => 'required|string|max:50',
-            //     'password' => 'required|string|min:6|max:100',
-            //     'email' => 'required|email|max:50',
-            //     'nombre' => 'required|string|max:50',
-            //     'apellidopaterno' => 'required|string|max:50',
-            //     'apellidomaterno' => 'required|string|max:50',
-            //    ];
-
-            //    // Validaciones específicas para la inserción
-            //    $reglasInsercion = [
-            //     'Usuario' => 'unique:usuarios,Usuario',
-            //     'email' => 'unique:usuarios,email',
-            //    ];
-
-            //    $reglas = ($type == 1) ? array_merge($reglasComunes, $reglasInsercion) : $reglasComunes;
-
-            //    $validador = Validator::make($request->all(), $reglas);
-
-            //    if ($validador->fails()) {
-            //     return response()->json([
-            //      'NUMCODE' => 1,
-            //      'STRMESSAGE' => $validador->errors()->first(),
-            //      'SUCCESS' => false,
-            //     ]);
-            //    }
-
+            
             if ($type == 1) {
                 // Inserción
                 $obj = new Usuario();
@@ -69,7 +42,7 @@ class UsuariosController extends Controller
                 $obj->apellidomaterno = $res->apellidomaterno;
                 if ($obj->save()) {
                     // Crear un nuevo registro en la tabla usuariorols
-                    $usuariorol = new Usuariorol();
+                    $usuariorol = new UsuarioRol();
                     $usuariorol->Id = Str::uuid(); // Otra vez, utiliza Str::uuid() o la lógica que necesites
                     $usuariorol->IdUsuario = $id; // Asociar con el usuario recién creado
                     $usuariorol->IdRol = $res->rol;
