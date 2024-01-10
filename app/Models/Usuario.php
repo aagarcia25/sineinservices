@@ -59,8 +59,9 @@ class Usuario extends Model
 		'apellidopaterno',
 		'apellidomaterno',
 		'SessionActiva',
-		'updatePassword'
-		
+		'updatePassword',
+		'IdSession'
+
 	];
 
 	public function usuario_rols()
