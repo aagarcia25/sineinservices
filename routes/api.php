@@ -27,7 +27,7 @@ Route::group([
     'prefix' => 'SINEIN_API_JGV',
     'middleware' => ['api'],
 ], function () {
-    Route::post('login', [LoginController::class, 'login']); //->middleware('throttle:5,10');
+    Route::post('login', [LoginController::class, 'login'])->middleware('throttle:5,10');
     Route::post('logout', [LoginController::class, 'logout']);
     Route::post('logoutuser', [LoginController::class, 'logoutuser']);
     Route::post('ChangePassword', [LoginController::class, 'ChangePassword']);
