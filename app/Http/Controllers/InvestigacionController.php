@@ -56,8 +56,11 @@ class InvestigacionController extends Controller
                 $obj->CreadoPor = $res->CHUSER;
 
                 if ($obj->save()) {
-                    $response = DB::select('call sp_GeneraFolio(:P_ID,:P_TIPO)', [
-                        'P_ID' => $id, 'P_TIPO' => 'investigacion']
+                    $response = DB::select(
+                        'call sp_GeneraFolio(:P_ID,:P_TIPO)',
+                        [
+                            'P_ID' => $id, 'P_TIPO' => 'investigacion'
+                        ]
                     );
                 }
 
@@ -94,7 +97,8 @@ class InvestigacionController extends Controller
                 $obj->save();
                 $response = $obj;
             } elseif ($type == 4) {
-                $response = DB::select('
+                $response = DB::select(
+                    '
                                         SELECT
                                             inv.* ,
                                             cu.id cuid,
@@ -110,6 +114,18 @@ class InvestigacionController extends Controller
                                             INNER JOIN SINEIN.Cat_Estatus ce ON ce.Id = inv.Estatus
                                             WHERE inv.deleted=0'
                 );
+            } elseif ($type == 5) {
+                $obj = Investigacion::find($res->CHID);
+                $obj->Antecedente = $res->antecedente;
+                $obj->Seguimiento = $res->seguimiento;
+                $obj->Cronologia = $res->cronologia;
+                $obj->Fuenteinf = $res->fuenteinf;
+                $obj->Relevantes = $res->relevantes;
+                $obj->Conclusion = $res->conlusion;
+                $obj->Recomendacion = $res->recomendaciones;
+                $obj->ModificadoPor = $res->CHUSER;
+                $obj->save();
+                $response = $obj;
             }
         } catch (\Exception $e) {
             $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
@@ -125,6 +141,8 @@ class InvestigacionController extends Controller
                     'STRMESSAGE' => $STRMESSAGE,
                     'RESPONSE' => $response,
                     'SUCCESS' => $SUCCESS,
-                ])));
+                ]
+            ))
+        );
     }
 }

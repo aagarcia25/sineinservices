@@ -39,6 +39,7 @@ Route::group([
     Route::post('Prueba', [PruebaController::class, 'Prueba']);
     Route::post('Veritas', [VeritasController::class, 'Veritas']);
     Route::post('FilesAdmin', [UtilityController::class, 'FilesAdmin']);
+    Route::post('SaveFiles', [UtilityController::class, 'SaveFiles']);
     Route::post('GetDocumento', [UtilityController::class, 'GetDocumento']);
     Route::post('usuarios', [UsuariosController::class, 'usuarios']);
 });

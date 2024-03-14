@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property string $Id
  * @property string $Modulo
- * @property string $ModuloId
  * @property string $FileName
  * @property string $CreadoPor
  * @property Carbon $FechaCreacion
@@ -34,8 +33,9 @@ class File extends Model
 	];
 
 	protected $fillable = [
+		'idRegistro',
 		'Modulo',
-		'ModuloId',
+		'Tipo',
 		'FileName',
 		'CreadoPor',
 		'FechaCreacion',

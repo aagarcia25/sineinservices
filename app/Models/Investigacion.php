@@ -91,6 +91,14 @@ class Investigacion extends Model
         'FechaCreacion',
         'ModificadoPor',
         'CreadoPor',
+        'Antecedente',
+        'Seguimiento',
+        'Cronologia',
+        'Fuenteinf',
+        'Relevantes',
+        'Conclusion',
+        'Recomendacion'
+
     ];
 
     public function cat_u_o()
