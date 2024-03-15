@@ -30,7 +30,7 @@ class UtilityController extends Controller
 
 
 
-    public function insertarImagen($phpWord, $marcadorBase, $IdRegistro, $Modulo, $Tipo, $inputPath, $outputPath)
+    public function insertarImagen($marcadorBase, $IdRegistro, $Modulo, $Tipo, $inputPath, $outputPath)
     {
         $imagenes = File::select('Modulo', 'FileName', 'CreadoPor', 'FechaCreacion', 'id', 'Archivo')
             ->where('IdRegistro', $IdRegistro)
@@ -67,8 +67,9 @@ class UtilityController extends Controller
                 }
             }
         } else {
+            $this->logInfo($marcadorBase . "esta vacia", __METHOD__, __LINE__);
             // Si no hay imágenes, eliminar todos los marcadores
-            $phpWord->setValue($marcadorBase, '');
+            // $phpWord->setValue($marcadorBase, '');
         }
     }
 
@@ -92,6 +93,17 @@ class UtilityController extends Controller
     }
 
 
+    public function vacia($inputPath, $outputPath,  $marcador)
+    {
+
+        // Cargar el documento como un TemplateProcessor
+        $templateProcessor = new TemplateProcessor($inputPath);
+        // Reemplazar el marcador con la imagen
+        $templateProcessor->setValue($marcador, "");
+        // Guardar el archivo de Word resultante
+        $templateProcessor->saveAs($outputPath);
+        // Eliminar el archivo temporal
+    }
 
 
 
@@ -141,7 +153,6 @@ class UtilityController extends Controller
                 ];
 
                 $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
-                $phpWord = IOFactory::load($outputPath);
 
 
                 $marcadores = [
@@ -161,30 +172,42 @@ class UtilityController extends Controller
                         ->where('IdRegistro', $res->CHID)
                         ->where('Tipo', $marcador)
                         ->get();
+                    if ($ListFiles->isNotEmpty()) {
+                        foreach ($ListFiles as $lfile) {
 
-                    foreach ($ListFiles as $lfile) {
-                        $this->logInfo('MarcadorBase ' . $lfile->FileName, __METHOD__, __LINE__);
-                        $this->logInfo('MarcadorBase ' . 'IMG_' . $lfile->Tipo, __METHOD__, __LINE__);
-
-                        $this->insertarImagen(
-                            $phpWord,
-                            'IMG_' . $lfile->Tipo,
-                            $lfile->IdRegistro,
-                            $lfile->Modulo,
-                            $lfile->Tipo,
+                            $this->insertarImagen(
+                                'IMG_' . $lfile->Tipo,
+                                $lfile->IdRegistro,
+                                $lfile->Modulo,
+                                $lfile->Tipo,
+                                $outputPath,
+                                $outputPath
+                            );
+                        }
+                    } else {
+                        $this->vacia(
                             $outputPath,
-                            $outputPath
+                            $outputPath,
+                            'IMG_' . $marcador
                         );
                     }
                 }
-
-
-                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . 'INVESTIGACION_TES.docx');
             }
 
 
+            if ($res->SALIDA == 'word') {
+                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . 'INVESTIGACION_TES.docx');
+                $response = base64_encode(file_get_contents($rutaCompleta));
+            } else {
+                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . 'INVESTIGACION_TES.pdf');
+                $phpWord = \PhpOffice\PhpWord\IOFactory::load($outputPath);
+                $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
+                $pdfWriter->save($rutaCompleta);
 
-            $response = base64_encode(file_get_contents($rutaCompleta));
+                // Leer el archivo PDF generado y enviarlo como respuesta
+                $response = base64_encode(file_get_contents($rutaCompleta));
+            }
+
 
 
             // unlink($outputPath);
