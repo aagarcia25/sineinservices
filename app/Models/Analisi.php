@@ -13,26 +13,47 @@ use Illuminate\Database\Eloquent\Model;
  * Class Analisi
  * 
  * @property string $Id
- * @property int $llave
- * @property string|null $Lugar
- * @property int|null $Dia
- * @property string|null $Mes
- * @property int|null $Anio
- * @property string|null $Folio
- * @property string|null $Tipo
- * @property string|null $Hechos
- * @property string|null $Estatus
- * @property string|null $Observacion
- * @property Carbon|null $Actualizacion
  * @property int $Deleted
  * @property Carbon $UltimaActualizacion
  * @property Carbon $FechaCreacion
  * @property string $ModificadoPor
  * @property string $CreadoPor
- * 
- * @property EstadosMexicano|null $estados_mexicano
- * @property CatMese|null $cat_mese
- * @property CatEstatus|null $cat_estatus
+ * @property int $llave
+ * @property string|null $Folio
+ * @property string|null $Asunto
+ * @property Carbon|null $Fecha
+ * @property string|null $SitioWeb
+ * @property string|null $CorreoElectronico
+ * @property string|null $Telefonos
+ * @property string|null $Sector
+ * @property string|null $Sede
+ * @property string|null $Especialidades
+ * @property string|null $Domicilio
+ * @property string|null $Sucursales
+ * @property string|null $Solistica
+ * @property string|null $InicioOperaciones
+ * @property string|null $SAT
+ * @property string|null $Antecedente
+ * @property string|null $ObjetivoInforme
+ * @property string|null $LugaresInteres
+ * @property string|null $Rutas
+ * @property string|null $Inteligencia
+ * @property string|null $Seguimiento
+ * @property string|null $Introduccion
+ * @property string|null $UbiGeo
+ * @property string|null $IndiceDelictivo
+ * @property string|null $GraficasDelictivas
+ * @property string|null $IncidenciasRelevantes
+ * @property string|null $ZonaInteres
+ * @property string|null $RutasC
+ * @property string|null $MapaDelictivo
+ * @property string|null $AnalisisColindancias
+ * @property string|null $FuenteInformacion
+ * @property string|null $Conclusion
+ * @property string|null $Relevantes
+ * @property string|null $Recomendaciones
+ * @property string|null $NumeroEmergencia
+ * @property string|null $Bibliografia
  *
  * @package App\Models
  */
@@ -44,46 +65,54 @@ class Analisi extends Model
 	public $timestamps = false;
 
 	protected $casts = [
-		'llave' => 'int',
-		'Dia' => 'int',
-		'Anio' => 'int',
-		'Actualizacion' => 'datetime',
 		'Deleted' => 'int',
 		'UltimaActualizacion' => 'datetime',
-		'FechaCreacion' => 'datetime'
+		'FechaCreacion' => 'datetime',
+		'llave' => 'int',
+		'Fecha' => 'datetime'
 	];
 
 	protected $fillable = [
-		'llave',
-		'Lugar',
-		'Dia',
-		'Mes',
-		'Anio',
-		'Folio',
-		'Tipo',
-		'Hechos',
-		'Estatus',
-		'Observacion',
-		'Actualizacion',
 		'Deleted',
 		'UltimaActualizacion',
 		'FechaCreacion',
 		'ModificadoPor',
-		'CreadoPor'
+		'CreadoPor',
+		'llave',
+		'Folio',
+		'Asunto',
+		'Fecha',
+		'SitioWeb',
+		'CorreoElectronico',
+		'Telefonos',
+		'Sector',
+		'Sede',
+		'Especialidades',
+		'Domicilio',
+		'Sucursales',
+		'Solistica',
+		'InicioOperaciones',
+		'SAT',
+		'Antecedente',
+		'ObjetivoInforme',
+		'LugaresInteres',
+		'Rutas',
+		'Inteligencia',
+		'Seguimiento',
+		'Introduccion',
+		'UbiGeo',
+		'IndiceDelictivo',
+		'GraficasDelictivas',
+		'IncidenciasRelevantes',
+		'ZonaInteres',
+		'RutasC',
+		'MapaDelictivo',
+		'AnalisisColindancias',
+		'FuenteInformacion',
+		'Conclusion',
+		'Relevantes',
+		'Recomendaciones',
+		'NumeroEmergencia',
+		'Bibliografia'
 	];
-
-	public function estados_mexicano()
-	{
-		return $this->belongsTo(EstadosMexicano::class, 'Lugar');
-	}
-
-	public function cat_mese()
-	{
-		return $this->belongsTo(CatMese::class, 'Mes');
-	}
-
-	public function cat_estatus()
-	{
-		return $this->belongsTo(CatEstatus::class, 'Estatus');
-	}
 }

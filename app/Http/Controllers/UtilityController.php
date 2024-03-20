@@ -216,7 +216,7 @@ class UtilityController extends Controller
         // Guardar el archivo de Word resultante
         $templateProcessor->saveAs($outputPath);
         // Eliminar el archivo temporal
-        //unlink($rutaTemporal);
+        unlink($rutaTemporal);
     }
 
 
@@ -294,7 +294,6 @@ class UtilityController extends Controller
                 ];
 
                 foreach ($marcadores as $marcador) {
-                    $this->logInfo('MarcadorBase ' . $marcador, __METHOD__, __LINE__);
                     $ListFiles = File::select('Modulo',  'Tipo', 'FileName', 'IdRegistro')
                         ->where('IdRegistro', $res->CHID)
                         ->where('Tipo', $marcador)
@@ -356,7 +355,11 @@ class UtilityController extends Controller
 
                 $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
                 $this->crearTable($outputPath, $outputPath, $Empleos);
-                $this->insImagen($outputPath, $outputPath, $param[0]->Foto, '${FOTO}');
+
+                $inteligencia = Inteligencium::find($res->CHID);
+                $imagen = $inteligencia->Foto;
+                $this->insImagen($outputPath, $outputPath, $imagen, 'FOTO');
+
 
                 $marcadores = [
                     'PrincipalHa',
@@ -374,7 +377,6 @@ class UtilityController extends Controller
 
 
                 foreach ($marcadores as $marcador) {
-                    $this->logInfo('MarcadorBase ' . $marcador, __METHOD__, __LINE__);
                     $ListFiles = File::select('Modulo',  'Tipo', 'FileName', 'IdRegistro')
                         ->where('IdRegistro', $res->CHID)
                         ->where('Tipo', $marcador)
