@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Inteligencium;
 use App\Models\Investigacion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpWord\TemplateProcessor;
-use PhpOffice\PhpWord\Element\Section;
-use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Style\Font;
+use PhpOffice\PhpWord\Element\Table;
 
 class UtilityController extends Controller
 {
@@ -27,8 +29,116 @@ class UtilityController extends Controller
         $templateProcessor->saveAs($outputPath);
     }
 
+    /*
+    public function crearTable($inputPath, $outputPath, $datos)
+    {
+        // Crear un objeto PhpWord
+        $phpWord = new PhpWord();
+
+        // Crear un objeto TemplateProcessor usando el archivo de entrada
+        $templateProcessor = new TemplateProcessor($inputPath);
+
+        // Establecer el estilo de fuente para la tabla
+        $fontStyle = new Font();
+        $fontStyle->setName('Calibri');
+        $fontStyle->setSize(5);
+
+        // Agregar una sección al documento
+        $section = $phpWord->addSection();
+
+        // Agregar la tabla al documento
+        $table = $section->addTable();
+
+        // Agregar encabezados de columna
+        $table->addRow();
+        $table->addCell(2000)->addText('Empresa', $fontStyle);
+        $table->addCell(2000)->addText('Puesto', $fontStyle);
+        $table->addCell(2000)->addText('Fecha', $fontStyle);
+        $table->addCell(2000)->addText('Duracion', $fontStyle);
+        $table->addCell(2000)->addText('CV', $fontStyle);
+        $table->addCell(2000)->addText('CVform', $fontStyle);
+        $table->addCell(2000)->addText('LinkeId', $fontStyle);
+        $table->addCell(2000)->addText('IMSS', $fontStyle);
+        $table->addCell(2000)->addText('Form', $fontStyle);
+        $table->addCell(2000)->addText('Carta', $fontStyle);
+        $table->addCell(2000)->addText('Motivo de salida', $fontStyle);
+
+        // Agregar filas con datos
+        foreach ($datos as $dato) {
+            $table->addRow();
+            $table->addCell(2000)->addText($dato->Empresa, $fontStyle);
+            $table->addCell(2000)->addText($dato->Puesto, $fontStyle);
+            $table->addCell(2000)->addText($dato->Fecha, $fontStyle);
+            $table->addCell(2000)->addText($dato->Duracion, $fontStyle);
+            $table->addCell(2000)->addText($dato->CV, $fontStyle);
+            $table->addCell(2000)->addText($dato->CVform, $fontStyle);
+            $table->addCell(2000)->addText($dato->LinkeId, $fontStyle);
+            $table->addCell(2000)->addText($dato->IMSS, $fontStyle);
+            $table->addCell(2000)->addText($dato->Form, $fontStyle);
+            $table->addCell(2000)->addText($dato->Carta, $fontStyle);
+            $table->addCell(2000)->addText($dato->MotivoSalida, $fontStyle);
+        }
+
+        // Guardar el archivo de Word resultante
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter->save($outputPath);
+    }
+*/
 
 
+    public function crearTable($templatePath, $outputPath, $datos)
+    {
+        // Crear un objeto TemplateProcessor usando el archivo de entrada
+        $templateProcessor = new TemplateProcessor($templatePath);
+
+        // Establecer el estilo de fuente para la tabla
+        $fontStyle = new Font();
+        $fontStyle->setName('Calibri');
+        $fontStyle->setSize(5); // Tamaño de fuente 10
+
+        // Crear la tabla con los datos
+        $table = new Table();
+        $table->addRow();
+        $table->addCell(2000)->addText('Empresa', $fontStyle);
+        $table->addCell(2000)->addText('Puesto', $fontStyle);
+        $table->addCell(2000)->addText('Fecha', $fontStyle);
+        $table->addCell(2000)->addText('Duracion', $fontStyle);
+        $table->addCell(2000)->addText('CV', $fontStyle);
+        $table->addCell(2000)->addText('CVform', $fontStyle);
+        $table->addCell(2000)->addText('LinkeId', $fontStyle);
+        $table->addCell(2000)->addText('IMSS', $fontStyle);
+        $table->addCell(2000)->addText('Form', $fontStyle);
+        $table->addCell(2000)->addText('Carta', $fontStyle);
+        $table->addCell(2000)->addText('Motivo de salida', $fontStyle);
+
+        // Agregar filas con datos
+        foreach ($datos as $dato) {
+            $table->addRow();
+            $table->addCell(2000)->addText(
+                $dato->Empresa,
+                $fontStyle
+            );
+            $table->addCell(2000)->addText($dato->Puesto, $fontStyle);
+            $table->addCell(2000)->addText(
+                $dato->Fecha,
+                $fontStyle
+            );
+            $table->addCell(2000)->addText($dato->Duracion, $fontStyle);
+            $table->addCell(2000)->addText($dato->CV, $fontStyle);
+            $table->addCell(2000)->addText($dato->CVform, $fontStyle);
+            $table->addCell(2000)->addText($dato->LinkeId, $fontStyle);
+            $table->addCell(2000)->addText($dato->IMSS, $fontStyle);
+            $table->addCell(2000)->addText($dato->Form, $fontStyle);
+            $table->addCell(2000)->addText($dato->Carta, $fontStyle);
+            $table->addCell(2000)->addText($dato->MotivoSalida, $fontStyle);
+        }
+
+        // Reemplazar el marcador de tabla en el documento Word
+        $templateProcessor->setComplexBlock('TABLA_EMPLEOS', $table);
+
+        // Guardar el archivo de Word resultante en la ruta de salida
+        $templateProcessor->saveAs($outputPath);
+    }
 
     public function insertarImagen($marcadorBase, $IdRegistro, $Modulo, $Tipo, $inputPath, $outputPath)
     {
@@ -47,10 +157,8 @@ class UtilityController extends Controller
                 if (!empty($imagen->Archivo)) {
                     $marcador = $marcadorBase . '_' . $contador;
                     $conc .= '${' . $marcador . '}';
-                    $this->logInfo('MarcadorBase ' . $conc, __METHOD__, __LINE__);
                     $contador++;
                 } else {
-                    $this->logInfo('Ruta de la imagen vacía', __METHOD__, __LINE__);
                 }
             }
             $reemplazos = ['${' . $marcadorBase . '}' => $conc];
@@ -59,7 +167,6 @@ class UtilityController extends Controller
             foreach ($imagenes as $imagen) {
                 if (!empty($imagen->Archivo)) {
                     $marcador = $marcadorBase . '_' . $contador2;
-                    $this->logInfo('MarcadorBase ' . $marcador, __METHOD__, __LINE__);
                     $this->insertarImagenEnMarcadorDesdeBaseDeDatos($inputPath, $outputPath, $imagen->Archivo, $marcador);
                     $contador2++;
                 } else {
@@ -68,13 +175,33 @@ class UtilityController extends Controller
             }
         } else {
             $this->logInfo($marcadorBase . "esta vacia", __METHOD__, __LINE__);
-            // Si no hay imágenes, eliminar todos los marcadores
-            // $phpWord->setValue($marcadorBase, '');
         }
     }
 
 
 
+    public function insImagen($inputPath, $outputPath, $imagen, $marcador)
+    {
+        // Verificar si hay una imagen disponible
+        if (!empty($imagen)) {
+            // Guardar los datos binarios de la imagen en un archivo temporal
+            $rutaTemporal = tempnam(sys_get_temp_dir(), 'imagen_');
+            file_put_contents($rutaTemporal, $imagen);
+            // Cargar el documento como un TemplateProcessor
+            $templateProcessor = new TemplateProcessor($inputPath);
+            // Reemplazar el marcador con la imagen
+            $templateProcessor->setImageValue($marcador, ['path' => $rutaTemporal, 'width' => 100, 'height' => 100]);
+            // Guardar el archivo de Word resultante
+            $templateProcessor->saveAs($outputPath);
+            // Eliminar el archivo temporal
+            unlink($rutaTemporal);
+        } else {
+            // Si no hay imagen, eliminar el marcador
+            $templateProcessor = new TemplateProcessor($inputPath);
+            $templateProcessor->setValue($marcador, '');
+            $templateProcessor->saveAs($outputPath);
+        }
+    }
 
 
     public function insertarImagenEnMarcadorDesdeBaseDeDatos($inputPath, $outputPath, $imagen, $marcador)
@@ -89,7 +216,7 @@ class UtilityController extends Controller
         // Guardar el archivo de Word resultante
         $templateProcessor->saveAs($outputPath);
         // Eliminar el archivo temporal
-        unlink($rutaTemporal);
+        //unlink($rutaTemporal);
     }
 
 
@@ -125,6 +252,7 @@ class UtilityController extends Controller
                 $outputPath = storage_path('/informes/INVESTIGACION_TES.docx');
                 $obj = new Investigacion();
                 $param = $obj->getInvestigacionbyID($res->CHID);
+
                 $reemplazos = [
                     '${HECHOS}' => $param[0]->Hechos,
                     '${FECHA}' => $param[0]->FechaCreacion,
@@ -153,7 +281,6 @@ class UtilityController extends Controller
                 ];
 
                 $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
-
 
                 $marcadores = [
                     'Antecedente',
@@ -192,14 +319,94 @@ class UtilityController extends Controller
                         );
                     }
                 }
+            } else if ($res->TIPO == "INTELIGENCIA") {
+                $inputPath = storage_path('/informes/INTELIGENCIA.docx');
+                $outputPath = storage_path('/informes/INTELIGENCIA_TES.docx');
+                $obj = new Inteligencium();
+                $param = $obj->getInteligenciabyID($res->CHID);
+                $Empleos = $obj->getempleosbyID($res->CHID);
+                $reemplazos = [
+                    '${MOTIVO}' => $param[0]->Motivo,
+                    '${FECHA}' => $param[0]->FechaNacimiento,
+                    '${FOLIO}' => $param[0]->Folio,
+                    '${NOMBRE}' => $param[0]->Nombre,
+                    '${NUMEROEMPLEADO}' => $param[0]->NumeroEmpleado,
+                    '${EDAD}' => $param[0]->Edad,
+                    '${FECHANACIMIENTO}' => $param[0]->FechaNacimiento,
+                    '${ESTADOC}' => $param[0]->EstadoC,
+                    '${ESCOLARIDAD}' => $param[0]->Escolaridad,
+                    '${TELEFONO}' => $param[0]->Telefono,
+                    '${CURP}' => $param[0]->CURP,
+                    '${RFC}' => $param[0]->RFC,
+                    '${SEGURO}' => $param[0]->Seguro,
+                    '${CORREO}' => $param[0]->Correo,
+                    '${DIRECCION}' => $param[0]->Direccion,
+                    '${PRINCIPALHA}' => $param[0]->PrincipalHa,
+                    '${PRUEBAVERITAS}' => $param[0]->PruebaVe,
+                    '${NORMAS}' => $param[0]->Normas,
+                    '${CONFESIONES}' => $param[0]->Confesiones,
+                    '${PRUEBACONFIANZA}' => $param[0]->PruebaConfianza,
+                    '${ENTREVISTA}' => $param[0]->Entrevista,
+                    '${FUENTEINF}' => $param[0]->FuentesInf,
+                    '${RELEVANTES}' => $param[0]->Relevantes,
+                    '${CONCLUSION}' => $param[0]->Conclusion,
+                    '${RECOMENDACIONES}' => $param[0]->Recomendacion,
+
+                ];
+
+                $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
+                $this->crearTable($outputPath, $outputPath, $Empleos);
+                $this->insImagen($outputPath, $outputPath, $param[0]->Foto, '${FOTO}');
+
+                $marcadores = [
+                    'PrincipalHa',
+                    'PruebaVe',
+                    'Normas',
+                    'Confesiones',
+                    'PruebaConfianza',
+                    'Entrevista',
+                    'Fuentes de informacion',
+                    'Relevantes',
+                    'Conclusion',
+                    'Recomendacion',
+                    'Evidencias',
+                ];
+
+
+                foreach ($marcadores as $marcador) {
+                    $this->logInfo('MarcadorBase ' . $marcador, __METHOD__, __LINE__);
+                    $ListFiles = File::select('Modulo',  'Tipo', 'FileName', 'IdRegistro')
+                        ->where('IdRegistro', $res->CHID)
+                        ->where('Tipo', $marcador)
+                        ->get();
+                    if ($ListFiles->isNotEmpty()) {
+                        foreach ($ListFiles as $lfile) {
+
+                            $this->insertarImagen(
+                                'IMG_' . $lfile->Tipo,
+                                $lfile->IdRegistro,
+                                $lfile->Modulo,
+                                $lfile->Tipo,
+                                $outputPath,
+                                $outputPath
+                            );
+                        }
+                    } else {
+                        $this->vacia(
+                            $outputPath,
+                            $outputPath,
+                            'IMG_' . $marcador
+                        );
+                    }
+                }
             }
 
 
             if ($res->SALIDA == 'word') {
-                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . 'INVESTIGACION_TES.docx');
+                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . $res->TIPO . '_TES.docx');
                 $response = base64_encode(file_get_contents($rutaCompleta));
             } else {
-                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . 'INVESTIGACION_TES.pdf');
+                $rutaCompleta = storage_path('informes' . DIRECTORY_SEPARATOR . $res->TIPO . '_TES.pdf');
                 $phpWord = \PhpOffice\PhpWord\IOFactory::load($outputPath);
                 $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
                 $pdfWriter->save($rutaCompleta);
@@ -359,14 +566,12 @@ class UtilityController extends Controller
         }
 
         return response()->json(
-
             [
                 'NUMCODE' => $NUMCODE,
                 'STRMESSAGE' => $STRMESSAGE,
                 'RESPONSE' => $response,
                 'SUCCESS' => $SUCCESS,
             ]
-
         );
     }
 
@@ -383,6 +588,39 @@ class UtilityController extends Controller
             // Manejar la excepción, por ejemplo, imprimir un mensaje de error
             echo 'Error al guardar el archivo: ' . $e->getMessage();
         }
+    }
+
+    public function GetImageInteligencia(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = '';
+        $SUCCESS = true;
+        try {
+            $data = $this->decryptData($request->b);
+            $obj = json_decode($data);
+            $obj = Inteligencium::find($obj->CHID);
+            if ($obj) {
+                $response = base64_encode($obj->Foto);
+            } else {
+                throw new \Exception('File not found');
+            }
+        } catch (\Exception $e) {
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                    'NUMCODE' => $NUMCODE,
+                    'STRMESSAGE' => $STRMESSAGE,
+                    'RESPONSE' => $response,
+                    'SUCCESS' => $SUCCESS,
+                ]
+            ))
+        );
     }
 
     public function GetDocumento(Request $request)

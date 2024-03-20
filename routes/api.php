@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnalisisController;
+use App\Http\Controllers\EmpleosController;
 use App\Http\Controllers\InteligenciaController;
 use App\Http\Controllers\InvestigacionController;
 use App\Http\Controllers\LoginController;
@@ -35,11 +36,14 @@ Route::group([
     Route::post('informes', [UtilityController::class, 'informes']);
     Route::post('Investigacion', [InvestigacionController::class, 'Investigacion']);
     Route::post('Inteligencia', [InteligenciaController::class, 'Inteligencia']);
+    Route::post('Inteligencia2', [InteligenciaController::class, 'Inteligencia2']);
     Route::post('Analisis', [AnalisisController::class, 'Analisis']);
     Route::post('Prueba', [PruebaController::class, 'Prueba']);
     Route::post('Veritas', [VeritasController::class, 'Veritas']);
     Route::post('FilesAdmin', [UtilityController::class, 'FilesAdmin']);
     Route::post('SaveFiles', [UtilityController::class, 'SaveFiles']);
     Route::post('GetDocumento', [UtilityController::class, 'GetDocumento']);
+    Route::post('GetImageInteligencia', [UtilityController::class, 'GetImageInteligencia']);
     Route::post('usuarios', [UsuariosController::class, 'usuarios']);
+    Route::post('Empleos', [EmpleosController::class, 'Empleos']);
 });
