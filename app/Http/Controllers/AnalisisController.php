@@ -92,30 +92,29 @@ class AnalisisController extends Controller
                                              WHERE ana.deleted=0
                                      ');
             } elseif ($type == 5) {
-                $obj = Analisi::find($request->CHID);
+                $obj = Analisi::find($res->CHID);
 
-                $obj->Antecedente = utf8_encode($request->Antecedente);
-                $obj->ObjetivoInforme = utf8_encode($request->ObjetivoInforme);
-                $obj->LugaresInteres = utf8_encode($request->LugaresInteres);
-                $obj->Rutas = utf8_encode($request->Rutas);
-                $obj->Inteligencia = utf8_encode($request->Inteligencia);
-                $obj->Seguimiento = utf8_encode($request->Seguimiento);
-                $obj->Introduccion = utf8_encode($request->Introduccion);
-                $obj->UbiGeo = utf8_encode($request->UbiGeo);
-                $obj->IndiceDelictivo = utf8_encode($request->IndiceDelictivo);
-                $obj->GraficasDelictivas = utf8_encode($request->GraficasDelictivas);
-                $obj->IncidenciasRelevantes = utf8_encode($request->IncidenciasRelevantes);
-                $obj->ZonaInteres = utf8_encode($request->ZonaInteres);
-                $obj->RutasC = utf8_encode($request->RutasC);
-                $obj->MapaDelictivo = utf8_encode($request->MapaDelictivo);
-                $obj->AnalisisColindancias = utf8_encode($request->AnalisisColindancias);
-                $obj->FuenteInformacion = utf8_encode($request->FuenteInformacion);
-                $obj->Conclusion = utf8_encode($request->Conclusion);
-                $obj->Relevantes = utf8_encode($request->Relevantes);
-                $obj->Recomendaciones = utf8_encode($request->Recomendaciones);
-                $obj->NumeroEmergencia = utf8_encode($request->NumeroEmergencia);
-                $obj->Bibliografia = utf8_encode($request->Bibliografia);
-
+                $obj->Antecedente = utf8_encode($res->Antecedente);
+                $obj->ObjetivoInforme = utf8_encode($res->ObjetivoInforme);
+                $obj->LugaresInteres = utf8_encode($res->LugaresInteres);
+                $obj->Rutas = utf8_encode($res->Rutas);
+                $obj->Inteligencia = utf8_encode($res->Inteligencia);
+                $obj->Seguimiento = utf8_encode($res->Seguimiento);
+                $obj->Introduccion = utf8_encode($res->Introduccion);
+                $obj->UbiGeo = utf8_encode($res->UbiGeo);
+                $obj->IndiceDelictivo = utf8_encode($res->IndiceDelictivo);
+                $obj->GraficasDelictivas = utf8_encode($res->GraficasDelictivas);
+                $obj->IncidenciasRelevantes = utf8_encode($res->IncidenciasRelevantes);
+                $obj->ZonaInteres = utf8_encode($res->ZonaInteres);
+                $obj->RutasC = utf8_encode($res->RutasC);
+                $obj->MapaDelictivo = utf8_encode($res->MapaDelictivo);
+                $obj->AnalisisColindancias = utf8_encode($res->AnalisisColindancias);
+                $obj->FuenteInformacion = utf8_encode($res->FuenteInformacion);
+                $obj->Conclusion = utf8_encode($res->Conclusion);
+                $obj->Relevantes = utf8_encode($res->Relevantes);
+                $obj->Recomendaciones = utf8_encode($res->Recomendaciones);
+                $obj->NumeroEmergencia = utf8_encode($res->NumeroEmergencia);
+                $obj->Bibliografia = utf8_encode($res->Bibliografia);
                 $obj->save();
                 $response = 'Exito';
             }

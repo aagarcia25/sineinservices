@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Analisi;
 use App\Models\File;
 use App\Models\Inteligencium;
 use App\Models\Investigacion;
@@ -401,6 +402,99 @@ class UtilityController extends Controller
                         );
                     }
                 }
+            } else if ($res->TIPO == "ANALISIS") {
+
+                $inputPath = storage_path('/informes/ANALISIS.docx');
+                $outputPath = storage_path('/informes/ANALISIS_TES.docx');
+                $obj = Analisi::find($res->CHID);
+
+                $reemplazos = [
+                    '${Folio}' => $obj->Folio,
+                    '${Asunto}' => $obj->Asunto,
+                    '${Fecha}' => $obj->Fecha,
+                    '${SitioWeb}' => $obj->SitioWeb,
+                    '${CorreoElectronico}' => $obj->CorreoElectronico,
+                    '${Telefonos}' => $obj->Telefonos,
+                    '${Sector}' => $obj->Sector,
+                    '${Sede}' => $obj->Sede,
+                    '${Especialidades}' => $obj->Especialidades,
+                    '${Domicilio}' => $obj->Domicilio,
+                    '${Sucursales}' => $obj->Sucursales,
+                    '${Solistica}' => $obj->Solistica,
+                    '${InicioOperaciones}' => $obj->InicioOperaciones,
+                    '${SAT}' => $obj->SAT,
+                    '${Antecedente}' => $obj->Antecedente,
+                    '${ObjetivoInforme}' => $obj->ObjetivoInforme,
+                    '${LugaresInteres}' => $obj->LugaresInteres,
+                    '${Rutas}' => $obj->Rutas,
+                    '${Inteligencia}' => $obj->Inteligencia,
+                    '${Seguimiento}' => $obj->Seguimiento,
+                    '${Introduccion}' => $obj->Introduccion,
+                    '${UbiGeo}' => $obj->UbiGeo,
+                    '${IndiceDelictivo}' => $obj->IndiceDelictivo,
+                    '${GraficasDelictivas}' => $obj->GraficasDelictivas,
+                    '${IncidenciasRelevantes}' => $obj->IncidenciasRelevantes,
+                    '${ZonaInteres}' => $obj->ZonaInteres,
+                    '${RutasC}' => $obj->RutasC,
+                    '${MapaDelictivo}' => $obj->MapaDelictivo,
+                    '${AnalisisColindancias}' => $obj->AnalisisColindancias,
+                    '${FuenteInformacion}' => $obj->FuenteInformacion,
+                    '${Conclusion}' => $obj->Conclusion,
+                    '${Relevantes}' => $obj->Relevantes,
+                    '${Recomendaciones}' => $obj->Recomendaciones,
+                    '${NumeroEmergencia}' => $obj->NumeroEmergencia,
+                    '${Bibliografia}' => $obj->Bibliografia
+                ];
+                $this->remplazarPalabras($inputPath, $outputPath, $reemplazos);
+
+
+                $marcadores = [
+                    'Antecedente',
+                    'ObjetivoInforme',
+                    'Seguimiento',
+                    'Introduccion',
+                    'UbiGeo',
+                    'IndiceDelictivo',
+                    'GraficasDelictivas',
+                    'IncidenciasRelevantes',
+                    'ZonaInteres',
+                    'RutasC',
+                    'MapaDelictivo',
+                    'AnalisisColindancias',
+                    'FuenteInformacion',
+                    'Conclusion',
+                    'Relevantes',
+                    'Recomendaciones',
+                    'NumeroEmergencia',
+                    'Bibliografia',
+                    'Evidencias',
+                ];
+
+                foreach ($marcadores as $marcador) {
+                    $ListFiles = File::select('Modulo',  'Tipo', 'FileName', 'IdRegistro')
+                        ->where('IdRegistro', $res->CHID)
+                        ->where('Tipo', $marcador)
+                        ->get();
+                    if ($ListFiles->isNotEmpty()) {
+                        foreach ($ListFiles as $lfile) {
+
+                            $this->insertarImagen(
+                                'IMG_' . $lfile->Tipo,
+                                $lfile->IdRegistro,
+                                $lfile->Modulo,
+                                $lfile->Tipo,
+                                $outputPath,
+                                $outputPath
+                            );
+                        }
+                    } else {
+                        $this->vacia(
+                            $outputPath,
+                            $outputPath,
+                            'IMG_' . $marcador
+                        );
+                    }
+                }
             }
 
 
@@ -412,16 +506,15 @@ class UtilityController extends Controller
                 $phpWord = \PhpOffice\PhpWord\IOFactory::load($outputPath);
                 $pdfWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'PDF');
                 $pdfWriter->save($rutaCompleta);
-
                 // Leer el archivo PDF generado y enviarlo como respuesta
                 $response = base64_encode(file_get_contents($rutaCompleta));
             }
 
 
 
+
+            // unlink($rutaCompleta);
             // unlink($outputPath);
-            //unlink($rutaCompleta);
-            // unlink($output);
         } catch (\Exception $e) {
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
