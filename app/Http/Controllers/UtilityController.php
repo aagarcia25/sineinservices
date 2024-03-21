@@ -584,9 +584,6 @@ class UtilityController extends Controller
             ))
         );
     }
-
-
-
     public function FilesAdmin(Request $request)
     {
         $NUMCODE = 0;
@@ -669,8 +666,6 @@ class UtilityController extends Controller
             ]
         );
     }
-
-
     public function generateWordImagen($imagenData, $texto, $phpWord)
     {
         try {
@@ -735,6 +730,76 @@ class UtilityController extends Controller
                 throw new \Exception('File not found');
             }
         } catch (\Exception $e) {
+            $NUMCODE = 1;
+            $STRMESSAGE = $e->getMessage();
+            $SUCCESS = false;
+        }
+
+        return response()->json(
+            $this->encryptData(json_encode(
+                [
+                    'NUMCODE' => $NUMCODE,
+                    'STRMESSAGE' => $STRMESSAGE,
+                    'RESPONSE' => $response,
+                    'SUCCESS' => $SUCCESS,
+                ]
+            ))
+        );
+    }
+    public function Graficas(Request $request)
+    {
+        $NUMCODE = 0;
+        $STRMESSAGE = 'Exito';
+        $response = '';
+        $SUCCESS = true;
+
+        try {
+            $data = $this->decryptData($request->b);
+            $obj = json_decode($data);
+            $type = $obj->NUMOPERACION;
+
+            if ($type == 1) {
+                $query = ' 
+                            SELECT COUNT(1) as ct,"Analisis" AS TIPO FROM SINEIN.Analisis
+                            UNION ALL
+                            SELECT COUNT(1) as ct, "Inteligencia" AS TIPO FROM SINEIN.Inteligencia
+                            UNION ALL
+                            SELECT COUNT(1) as ct,"Investigacion" AS TIPO  FROM SINEIN.Investigacion
+                            UNION ALL
+                            SELECT COUNT(1) as ct,"Veritas" AS TIPO FROM SINEIN.Veritas
+                            UNION ALL
+                            SELECT COUNT(1) as ct,"Pruebas" AS TIPO FROM SINEIN.Pruebas';
+            } elseif ($type == 2) {
+                $query = ' 
+                            SELECT UUID() AS id,COUNT(1) AS value,"Analisis" AS label FROM SINEIN.Analisis
+                            UNION ALL
+                            SELECT UUID() AS id,COUNT(1) AS value, "Inteligencia" AS label FROM SINEIN.Inteligencia
+                            UNION ALL
+                            SELECT UUID() AS id,COUNT(1) AS value,"Investigacion" AS label  FROM SINEIN.Investigacion
+                            UNION ALL
+                            SELECT UUID() AS id,COUNT(1) AS value,"Veritas" AS label FROM SINEIN.Veritas
+                            UNION ALL
+                            SELECT UUID() AS id,COUNT(1) AS value,"Pruebas" AS label FROM SINEIN.Pruebas
+                ';
+            } elseif ($type == 3) {
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_TiposPrueba';
+            } elseif ($type == 4) {
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_UO';
+            } elseif ($type == 5) {
+                $query = ' SELECT Id value, EstadoNombre label FROM SINEIN.EstadosMexicanos';
+            } elseif ($type == 6) {
+                $query = " SELECT 'SI' VALUE, 'SI' label FROM DUAL
+                           UNION all
+                           SELECT 'NO' VALUE, 'NO' label FROM DUAL";
+            } elseif ($type == 7) {
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Cat_Estatus';
+            } elseif ($type == 8) {
+                $query = ' SELECT Id value, Descripcion label FROM SINEIN.Roles';
+            }
+
+            $response = DB::select($query);
+        } catch (\Exception $e) {
+            $this->logInfo($e->getMessage(), __METHOD__, __LINE__);
             $NUMCODE = 1;
             $STRMESSAGE = $e->getMessage();
             $SUCCESS = false;

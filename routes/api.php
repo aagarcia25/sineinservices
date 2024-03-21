@@ -46,4 +46,5 @@ Route::group([
     Route::post('GetImageInteligencia', [UtilityController::class, 'GetImageInteligencia']);
     Route::post('usuarios', [UsuariosController::class, 'usuarios']);
     Route::post('Empleos', [EmpleosController::class, 'Empleos']);
+    Route::post('Graficas', [UtilityController::class, 'Graficas']);
 });
